@@ -13,9 +13,12 @@ import cookieHandler from './utils/CookieHandler.js';
 import './css/main.css';
 import './css/restaurantView.css';
 
+import env from './config/environment';
+
+let PRODUCTION = env.production;
 
 //set the baseURL for axios calls, all urls in axios will then be relative to this base
-axios.defaults.baseURL = 'https://restaurant-seat-finder-api.herokuapp.com';
+axios.defaults.baseURL = PRODUCTION ? 'https://restaurant-seat-finder-api.herokuapp.com' : 'http://localhost:5000';
 
 
 //import buefy into Vue
