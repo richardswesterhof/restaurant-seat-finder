@@ -15,7 +15,7 @@ import './css/restaurantView.css';
 
 
 //set the baseURL for axios calls, all urls in axios will then be relative to this base
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = 'https://restaurant-seat-finder-api.herokuapp.com';
 
 
 //import buefy into Vue
