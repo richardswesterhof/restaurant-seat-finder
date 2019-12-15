@@ -1,8 +1,7 @@
-<!-- This component assumes the restaurant is already authenticated, represented by the session-id prop -->
 <template>
   <div>
     <div>
-      <h2 class="rest-view-heading">{{resData.name}}</h2>
+      <h2 class="rest-view-heading">{{resData ? resData.name : 'invalid restaurant name'}}</h2>
       <h3>Amount of free seats:</h3>
     </div>
 
@@ -15,7 +14,12 @@
       </b-icon>
     </div>
 
-    <RestaurantSeatCounter :free-seats="resData.free_seats" :total-seats="resData.total_seats" v-on:seat-update="updateSeats($event)">
+    <RestaurantSeatCounter
+      v-if="finishedAuthentication"
+      v-bind:free-seats="resData ? resData.free_seats : NaN"
+      v-bind:total-seats="resData ? resData.total_seats : NaN"
+      v-on:seat-update="updateSeats($event)"
+    >
     </RestaurantSeatCounter>
 
 
@@ -31,38 +35,48 @@
     name: "RestaurantMainView",
     components: {RestaurantSeatCounter},
 
-    props: {
-      authToken: {
-        type: String,
-        required: false,
-        default: null,
-      },
-
-      resData: {
-        type: Object,
-        required: true,
-        default: null,
-      },
+    data() {
+      return {
+        authToken: '',
+        resData: {},
+        finishedAuthentication: false,
+      }
     },
 
-    beforeRouteEnter(to, from, next) {
-      if(!(from.params.authToken || cookieHandler.getCookie('authToken', 512))) {
+    async beforeRouteEnter(to, from, next) {
+      let cookieToken = cookieHandler.getCookie('authToken', 512);
+      console.log(cookieToken);
+      if(!(from.params.authToken || cookieToken)) {
         next({name: 'Login', params: {reasonMessage: 'No session token found, please log in'}});
       }
-      //else is important, otherwise next() would be called twice if the user is not authorized!
       else {
-        next();
+        api.reAuthenticate(cookieToken).then((response) => {
+          //authenticated
+          if(response.status === 200) {
+            console.log(response);
+            next(vm => {
+              vm.authToken = from.params.authToken ? from.params.authToken : cookieToken;
+              vm.resData = response.data;
+              vm.finishedAuthentication = true;
+            });
+          }
+          //not authenticated
+          else {
+            next({name: 'Login', params: {reasonMessage: 'Your session could not be verified, please log in again'}});
+          }
+        });
       }
     },
 
-    mounted() {
-      this.$store.dispatch('loginSuccessful', {authToken: this.$props.authToken});
+    async mounted() {
+      await this.$nextTick();
+      this.$store.dispatch('loginSuccessful', {authToken: this.authToken});
     },
 
     methods: {
       updateSeats(newAmount) {
         console.log('the amount of free seats will be updated to ' + newAmount);
-        api.updateSeats(this.$props.resData.id, newAmount, this.$props.authToken).then((response) => {
+        api.updateSeats(this.resData.id, newAmount, this.authToken).then((response) => {
           if(response.status === 200) {
             this.$buefy.toast.open({message: 'successfully updated the amount of seats to' + newAmount, type:'is-success'});
           }
