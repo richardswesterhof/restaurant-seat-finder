@@ -29,6 +29,20 @@ export default {
   },
 
   /**
+   * creates a cookie with given key, value and lifetime,
+   * but only if the key value PAIR does not exist yet
+   * meaning that if the key exists but the value is different, the value will be changed
+   * @param {String} key: the key of the cookie
+   * @param {String} value: the value of the cookie
+   * @param {Number} expires: the amount of days before the cookie expires
+   */
+  createCookieIfNotExists(key, value, ...expires) {
+    if(!(this.getCookie(key) === value)) {
+      this.createCookie(key, value, arguments[2]);
+    }
+  },
+
+  /**
    * deletes a cookie if present, or simply returns silently if not present
    * @param {String} key: the key of the cookie to be deleted
    */
@@ -60,7 +74,7 @@ export default {
    */
   takeUntil(string, endChar, ...others) {
     let startIndex = 0;
-    let maxBound = 100;
+    let maxBound = 1000;
     if(arguments.length > 2) {
       startIndex = arguments[2];
     }
@@ -84,7 +98,7 @@ export default {
   /**
    * gets the value of a cookie
    * @param {String} key: the key of the cookie
-   * @param {Number} maxLength: the maximum length of the cookie, leave empty for 100
+   * @param {Number} maxLength: the maximum length of the cookie, leave empty for 1000
    * @returns {undefined|*|string}: the value of the cookie, or undefined if the cookie does not exist
    */
   getCookie(key, maxLength) {
