@@ -13,12 +13,8 @@ import cookieHandler from './utils/CookieHandler.js';
 import './css/main.css';
 import './css/restaurantView.css';
 
-import env from './config/environment';
-
-let PRODUCTION = env.production;
-
 //set the baseURL for axios calls, all urls in axios will then be relative to this base
-axios.defaults.baseURL = PRODUCTION ? 'https://restaurant-seat-finder-api.herokuapp.com' : 'http://localhost:5000';
+axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'https://restaurant-seat-finder-api.herokuapp.com' : 'http://localhost:5000';
 
 
 //import buefy into Vue
@@ -74,6 +70,15 @@ const store = new Vuex.Store({
     },
   },
 });
+
+router.afterEach((to) => {
+  if(process.env.NODE_ENV === 'development') {
+    console.log('sending newPageView: ' + to.path + ' to mouseflow');
+  }
+  window._mfq.push(['newPageView',  to.path]);
+});
+
+
 
 Vue.config.productionTip = false;
 
