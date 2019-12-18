@@ -1,7 +1,7 @@
 <template>
   <div class="columns">
     <div class="column is-10 is-offset-1">
-      <h2 class="has-text-centered has-text-centered-mobile" style="margin-bottom:2%; margin-left:2%;">Restaurants Nearby</h2>
+      <h2 class="has-text-centered has-text-centered-mobile" style="margin-bottom:2vh; margin-left:2%;">Restaurants Nearby</h2>
       <b-loading :active="isLoading"></b-loading>
       <b-collapse
         class="card has-rounded-corners"
@@ -11,7 +11,7 @@
         @open="toggleOpen(res.id)"
         @close="toggleOpen(res.id)"
         v-show="!isLoading"
-        style="margin: 0 2% 0.4% 2%;"
+        style="margin: 0 2% 0.5vh 2%;"
       >
         <div
           slot="trigger"

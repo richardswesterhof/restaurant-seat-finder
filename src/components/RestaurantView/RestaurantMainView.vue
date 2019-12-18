@@ -45,7 +45,6 @@
 
     async beforeRouteEnter(to, from, next) {
       let cookieToken = cookieHandler.getCookie('authToken', 512);
-      console.log(cookieToken);
       if(!(from.params.authToken || cookieToken)) {
         next({name: 'Login', params: {reasonMessage: 'No session token found, please log in'}});
       }

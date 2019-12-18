@@ -2,6 +2,21 @@
   <div id="app">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
     <Header></Header>
+
+    <b-message
+      title="Attention"
+      type="is-primary"
+      style="margin: -4.5vh 5% 0 5%; background-color: whitesmoke;"
+      :closable="false"
+      :active.sync="dataCollectionMessageOpen"
+    >
+      We would like to collect usage statistics and data to improve our website. By clicking 'Agree' you agree that we can collect anonymous data from your usage.
+      <div>
+        <b-button type="is-primary" @click="canCollectData(true)">Agree</b-button>
+        <b-button @click="canCollectData(false)">Decline</b-button>
+      </div>
+    </b-message>
+
     <router-view id="main-router"/>
     <Footer></Footer>
   </div>
@@ -17,8 +32,21 @@
     components: {Footer, Header},
 
     mounted() {
-      //TODO: login once we can reauthenticate with just an authToken
+      //TODO: try to login.
+    },
 
+    data() {
+      return {
+        dataCollectionMessageOpen: true,
+      }
+    },
+
+
+    methods: {
+      canCollectData(bool) {
+        this.$store.dispatch('canCollectData', {tf: bool});
+        this.dataCollectionMessageOpen = false;
+      },
     },
   }
 </script>
