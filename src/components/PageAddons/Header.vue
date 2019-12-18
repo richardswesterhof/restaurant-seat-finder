@@ -16,12 +16,23 @@
           Register
         </b-button>
         </b-field>
-        <b-button class="button is-primary" @click="redirectAccountPage" v-show="loggedIn">
-          My Restaurant
-        </b-button>
-        <b-button class="button is-primary" @click="logout" v-show="loggedIn">
+
+        <b-field grouped position="is-right">
+        <b-dropdown hoverable aria-role="list">
+          <b-button class="button is-primary" @click="redirectAccountPage" v-show="loggedIn" slot="trigger">
+            <span>My Restaurant</span>
+            <b-icon icon="menu-down"></b-icon>
+          </b-button>
+
+          <b-dropdown-item aria-role="listitem" @click="redirectEditAccountPage" >Edit Account</b-dropdown-item>
+        </b-dropdown>
+
+
+        <b-button class="button is-primary" style="margin-left: 2%" @click="logout" v-show="loggedIn">
           Log out
         </b-button>
+      </b-field>
+
       </div>
       <b-loading :active="isLoading"></b-loading>
     </div>
@@ -60,6 +71,12 @@
       redirectAccountPage() {
         if(!(this.$route.name === 'MyRestaurant')) {
           this.$router.push({name: 'MyRestaurant', params: {authToken: this.$store.state.authToken, resData: null}});
+        }
+      },
+
+      redirectEditAccountPage(){
+        if(!(this.$route.name === 'EditAccount')) {
+          this.$router.push({name: 'EditAccount', params: {authToken: this.$store.state.authToken, resData: null}});
         }
       },
 
