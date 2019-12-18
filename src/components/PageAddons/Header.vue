@@ -19,6 +19,9 @@
         <b-button class="button is-primary" @click="redirectAccountPage" v-show="loggedIn">
           My Restaurant
         </b-button>
+        <b-button class="button is-primary" @click="logout" v-show="loggedIn">
+          Log out
+        </b-button>
       </div>
     </div>
 
@@ -53,6 +56,14 @@
           this.$router.push({name: 'MyRestaurant', params: {authToken: this.$store.state.authToken, resData: null}});
         }
       },
+      logout(){
+        this.isLoading = true;
+        if(!(this.$route.name === 'MainPage')) {
+          this.$router.push('/');
+        }
+        this.isLoading = false;
+        this.$store.dispatch('logoutSuccessful');
+      }
     },
   }
 </script>
