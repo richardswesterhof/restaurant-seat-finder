@@ -2,7 +2,7 @@
   <div class="content">
     <div class="columns is-mobile">
       <div class="column is-6 is-offset-1">
-        <h4 style="font-weight: bold; margin-bottom: 1%">Type</h4>
+        <h4 style="font-weight: bold; margin-bottom: 1vh">Type</h4>
         <b-field required>
           <b-radio native-value="restaurant" v-model="placeType">
             Restaurant
@@ -105,7 +105,7 @@
           </b-input>
         </b-field>
 
-        <h4 style="font-weight: bold; margin-bottom: 1%">Address</h4>
+        <h4 style="font-weight: bold; margin-bottom: 1vh">Address</h4>
         <b-field grouped>
           <b-field label="HN" style="width: 20%">
             <b-input
@@ -185,7 +185,7 @@
         </b-field>
 
 
-        <p style="text-align:right; font-size:0.9em; margin-top: -1.2%">Fields marked with an asterisk (*) are required</p>
+        <p style="text-align:right; font-size:0.9em; margin-top: -1.2vh">Fields marked with an asterisk (*) are required</p>
 
         <b-field grouped>
           <b-checkbox v-model="shouldRemember">

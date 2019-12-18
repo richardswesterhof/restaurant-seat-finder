@@ -23,8 +23,8 @@
           Log out
         </b-button>
       </div>
+      <b-loading :active="isLoading"></b-loading>
     </div>
-
   </header>
 </template>
 
@@ -36,6 +36,12 @@
       loggedIn() {
         return this.$store.state.loggedIn;
       },
+    },
+
+    data() {
+      return {
+        isLoading: false,
+      }
     },
 
     methods: {
@@ -56,6 +62,7 @@
           this.$router.push({name: 'MyRestaurant', params: {authToken: this.$store.state.authToken, resData: null}});
         }
       },
+
       logout(){
         this.isLoading = true;
         if(!(this.$route.name === 'MainPage')) {
@@ -75,8 +82,8 @@
     /*background: linear-gradient(to bottom, #960d04 0%, #d10d00 100%);*/
     background-image: url("../../assets/background4.jpg");
     background-size: cover;
-    margin: 0 0 5% 0;
-    height: 10%;
+    margin: 0 0 5vh 0;
+    height: 10vh;
     width: 105%;
   }
 

@@ -15,7 +15,7 @@
 <style scoped>
   .content{
     background-color: var(--lightGrey);
-    margin-bottom: 3%;
+    margin-bottom: 3vh;
     margin-right: -1%;
     margin-left: 1%;
   }
