@@ -2,7 +2,7 @@
   <footer class="footer has-text-left">
     <div class="content">
       <p class="font-header" id="footerSelfLink" style="font-size: 1em; font-weight: bold">This page: <a href="https://ress-restaurant-seat-finder.herokuapp.com">ress-restaurant-seat-finder.herokuapp.com</a></p>
-      <p class="font-header" id="footerFeedbackLink" style="font-size: 1em; font-weight: bold">If you have feedpack, please leave it here: </p>
+      <p class="font-header" id="footerFeedbackLink" style="font-size: 1em; font-weight: bold">If you have any feedback, please leave it here: </p>
     </div>
   </footer>
 </template>

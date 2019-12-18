@@ -3,7 +3,7 @@
     <div class="columns is-mobile">
       <div class="column is-6 is-offset-1">
         <h4 style="font-weight: bold; margin-bottom: 1%">Type</h4>
-        <b-field>
+        <b-field required>
           <b-radio native-value="restaurant" v-model="placeType">
             Restaurant
           </b-radio>
@@ -21,11 +21,11 @@
           </b-radio>
         </b-field>
 
-        <b-field label="Name" id="registerNameText">
+        <b-field label="Restaurant Name" id="registerNameText">
           <b-input
             v-model="placeName"
             type="name"
-            placeholder="Your name"
+            placeholder="Your restaurant's name"
             required
             id="nameRegister"
             rounded
@@ -35,11 +35,11 @@
 
         <b-field label="Username" id="registerUsernameText">
           <b-input
-            v-model="placeUserName"
+            v-model="placeUsername"
             type="username"
             placeholder="Your Username"
             required
-            id="userNameRegister"
+            id="usernameRegister"
             rounded
           >
           </b-input>
@@ -88,7 +88,6 @@
             v-model="placeWebsite"
             type="url"
             placeholder="Your website"
-            required
             id="websiteRegister"
             rounded
           >
@@ -100,8 +99,7 @@
             v-model="placePhoneNumber"
             type="tel"
             placeholder="Your phone number"
-            required
-            id="websiteRegister"
+            id="phoneRegister"
             rounded
           >
           </b-input>
@@ -139,7 +137,6 @@
             v-model="placePostcode"
             type="postcode"
             placeholder="Your postcode"
-            required
             id="postcodeRegister"
             rounded
           >
@@ -152,7 +149,6 @@
               v-model="placeCity"
               type="city"
               placeholder="Your city"
-              required
               id="cityRegister"
               rounded
             >
@@ -165,7 +161,6 @@
               v-model="placeCountry"
               type="country"
               placeholder="Your country"
-              required
               id="countryRegister"
               rounded
             >
@@ -179,7 +174,7 @@
             type="number"
             placeholder="Your maximum number of seats"
             required
-            id="houseNumberRegister"
+            id="totalSeatsRegister"
             rounded
           >
           </b-input>
@@ -188,6 +183,9 @@
         <b-field label="Description">
           <b-input v-model="placeDescription" maxlength="300" type="textarea"></b-input>
         </b-field>
+
+
+        <p style="text-align:right; font-size:0.9em; margin-top: -1.2%">Fields marked with an asterisk (*) are required</p>
 
         <b-field grouped>
           <b-checkbox v-model="shouldRemember">
@@ -200,7 +198,6 @@
             </option>
           </b-select>
         </b-field>
-
 
         <button class="button is-right is-primary" @click.prevent="register" id="registerButton">Sign Up</button>
       </div>
@@ -221,6 +218,16 @@ import cookieHandler from '../../utils/CookieHandler';
       lifetimes() {
         return cookieHandler.lifetimes;
       },
+
+      isAllRequiredFieldsFilledIn() {
+        for(let i = 0; i < this.requiredFields.length; i++) {
+          if(!(this[this.requiredFields[i].name])) {
+            console.log(this.requiredFields[i].name + ' was not filled in');
+            return false;
+          }
+        }
+        return true;
+      }
     },
 
     data() {
@@ -229,10 +236,11 @@ import cookieHandler from '../../utils/CookieHandler';
         isLoading: false,
         tokenLifetime: 1,
 
+
         //all of the variables for the register form
-        placeType: '',
+        placeType: 'restaurant',
         placeName: '',
-        placeUserName: '',
+        placeUsername: '',
         placeEmail: '',
         placePassword: '',
         placePasswordRepeat: '',
@@ -245,19 +253,32 @@ import cookieHandler from '../../utils/CookieHandler';
         placeCountry: '',
         placeTotalSeats: '',
         placeDescription: '',
+
+        requiredFields: [
+          {name: 'placeName', id: 'nameRegister'},
+          {name: 'placeUsername', id: 'usernameRegister'},
+          {name: 'placeEmail', id: 'emailRegister'},
+          {name: 'placePassword', id: 'passwordRegister'},
+          {name: 'placePasswordRepeat', id: 'passwordRegisterRepeat'},
+          {name: 'placeHouseNumber', id :'houseNumberRegister'},
+          {name: 'placeStreet', id: 'streetRegister'},
+          {name: 'placeTotalSeats', id: 'totalSeatsRegister'},
+        ],
       }
+    },
+
+    mounted() {
+      this.markAllRequiredFields();
     },
 
     methods: {
       register() {
-        if(!(this.placeType && this.placeName && this.placeUserName && this.placeEmail && this.placePassword &&
-            this.placePasswordRepeat === this.placePassword && this.placeHouseNumber && this.placeStreet &&
-            this.placePostcode && this.placeCity && this.placeCountry && this.placeTotalSeats && this.placeDescription)) {
+        if(!(this.isAllRequiredFieldsFilledIn) || !(this.placePassword === this.placePasswordRepeat)) {
           this.$buefy.toast.open({message: 'please fill in all required fields', type: 'is-danger'});
           return;
         }
 
-        api.register(this.placeType, this.placeName, this.placeUserName, this.placeEmail, this.placePassword,
+        api.register(this.placeType, this.placeName, this.placeUsername, this.placeEmail, this.placePassword,
             this.placeWebsite, this.placePhoneNumber, this.placeHouseNumber, this.placeStreet, this.placePostcode,
             this.placeCity, this.placeCountry, this.placeTotalSeats, this.placeDescription)
             .then((response) => {
@@ -270,6 +291,14 @@ import cookieHandler from '../../utils/CookieHandler';
             this.$buefy.toast.open({message: 'could not register your account', type:'is-danger'});
           }
         });
+      },
+
+      markAllRequiredFields() {
+        for(let i = 0; i < this.requiredFields.length; i++) {
+          let parent = document.getElementById(this.requiredFields[i].id).parentElement.parentElement;
+          let label = parent.getElementsByTagName('label')[0];
+          label.innerText = label.innerText + '*';
+        }
       },
     },
   }
