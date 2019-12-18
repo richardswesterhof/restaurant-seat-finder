@@ -16,12 +16,26 @@
           Register
         </b-button>
         </b-field>
-        <b-button class="button is-primary" @click="redirectAccountPage" v-show="loggedIn">
-          My Restaurant
-        </b-button>
-      </div>
-    </div>
 
+        <b-field grouped position="is-right">
+        <b-dropdown hoverable aria-role="list">
+          <b-button class="button is-primary" @click="redirectAccountPage" v-show="loggedIn" slot="trigger">
+            <span>My Restaurant</span>
+            <b-icon icon="menu-down"></b-icon>
+          </b-button>
+
+          <b-dropdown-item aria-role="listitem" @click="redirectEditAccountPage" >Edit Account</b-dropdown-item>
+        </b-dropdown>
+
+
+        <b-button class="button is-primary" style="margin-left: 2%" @click="logout" v-show="loggedIn">
+          Log out
+        </b-button>
+      </b-field>
+
+      </div>
+      <b-loading :active="isLoading"></b-loading>
+    </div>
   </header>
 </template>
 
@@ -33,6 +47,12 @@
       loggedIn() {
         return this.$store.state.loggedIn;
       },
+    },
+
+    data() {
+      return {
+        isLoading: false,
+      }
     },
 
     methods: {
@@ -53,6 +73,21 @@
           this.$router.push({name: 'MyRestaurant', params: {authToken: this.$store.state.authToken, resData: null}});
         }
       },
+
+      redirectEditAccountPage(){
+        if(!(this.$route.name === 'EditAccount')) {
+          this.$router.push({name: 'EditAccount', params: {authToken: this.$store.state.authToken, resData: null}});
+        }
+      },
+
+      logout(){
+        this.isLoading = true;
+        if(!(this.$route.name === 'MainPage')) {
+          this.$router.push('/');
+        }
+        this.isLoading = false;
+        this.$store.dispatch('logoutSuccessful');
+      }
     },
   }
 </script>
