@@ -16,9 +16,9 @@
 <style scoped>
 
   footer {
-    height: 5vh;
+    height: 100px;
     width: 105%;
-    margin-top: 6vh;
+    margin-top: 30px;
     /*background: linear-gradient(to top, #960d04 0%, #d10d00 100%);*/
     background-image: url("../../assets/background4.jpg");
     background-repeat:no-repeat;

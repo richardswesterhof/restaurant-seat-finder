@@ -4,7 +4,6 @@ import Vue from 'vue';
 import App from './App';
 import router from './router';
 import Buefy from 'buefy';
-import 'buefy/dist/buefy.css';
 import Vuex from 'vuex';
 import axios from 'axios';
 import cookieHandler from './utils/CookieHandler.js';
@@ -92,6 +91,9 @@ const store = new Vuex.Store({
 
         window._mfq.push(['newPageView', router.currentRoute.path]);
       }
+
+      //add the choice to the cookies
+      cookieHandler.createCookie('collectionConsent', params.tf, 100*365);
 
       if(process.env.NODE_ENV === 'development' && params.tf) {
         console.log('sending newPageView: ' + router.currentRoute.path + ' to mouseflow');

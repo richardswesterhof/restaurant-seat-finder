@@ -52,7 +52,6 @@
         api.reAuthenticate(cookieToken).then((response) => {
           //authenticated
           if(response.status === 200) {
-            console.log(response);
             next(vm => {
               vm.authToken = from.params.authToken ? from.params.authToken : cookieToken;
               vm.resData = response.data;

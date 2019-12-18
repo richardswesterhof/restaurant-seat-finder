@@ -2,21 +2,7 @@
   <div id="app">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
     <Header></Header>
-
-    <b-message
-      title="Attention"
-      type="is-primary"
-      style="margin: -4.5vh 5% 0 5%; background-color: whitesmoke;"
-      :closable="false"
-      :active.sync="dataCollectionMessageOpen"
-    >
-      We would like to collect usage statistics and data to improve our website. By clicking 'Agree' you agree that we can collect anonymous data from your usage.
-      <div>
-        <b-button type="is-primary" @click="canCollectData(true)">Agree</b-button>
-        <b-button @click="canCollectData(false)">Decline</b-button>
-      </div>
-    </b-message>
-
+    <ConsentMessage :open-by-default="!userHasDecidedOnConsent"></ConsentMessage>
     <router-view id="main-router"/>
     <Footer></Footer>
   </div>
@@ -25,28 +11,47 @@
 <script>
   import Header from "./components/PageAddons/Header";
   import Footer from "./components/PageAddons/Footer";
-
+  import cookieHandler from "./utils/CookieHandler";
+  import api from "./api/api_wrapper";
+  import ConsentMessage from "./components/PageAddons/ConsentMessage";
 
   export default {
     name: 'App',
-    components: {Footer, Header},
+    components: {ConsentMessage, Footer, Header},
+
+    computed: {
+      userHasDecidedOnConsent() {
+        let collectionConsent = cookieHandler.getCookie('collectionConsent');
+        return (collectionConsent === 'true') || (collectionConsent === 'false');
+      },
+    },
 
     mounted() {
-      //TODO: try to login.
-    },
+      let consentCookie = cookieHandler.getCookie('collectionConsent');
+      if(window._mfq === [] && consentCookie !== 'false') {
+        (function() {
+          var mf = document.createElement("script");
+          mf.type = "text/javascript"; mf.async = true;
+          mf.src = "//cdn.mouseflow.com/projects/614bc48f-503b-4d03-9f17-b5044a6a94c3.js";
+          document.getElementsByTagName("head")[0].appendChild(mf);
+        })();
 
-    data() {
-      return {
-        dataCollectionMessageOpen: true,
+        window._mfq.push(['newPageView', this.$route.path]);
       }
-    },
 
-
-    methods: {
-      canCollectData(bool) {
-        this.$store.dispatch('canCollectData', {tf: bool});
-        this.dataCollectionMessageOpen = false;
-      },
+      let cookieToken = cookieHandler.getCookie('authToken', 512);
+      if(cookieToken) {
+        api.reAuthenticate(cookieToken).then((response) => {
+          //authenticated
+          if(response.status === 200) {
+            this.$store.dispatch('loginSuccessful', {authToken: cookieToken});
+          }
+          //not authenticated
+          else {
+            cookieHandler.deleteCookie('authToken');
+          }
+        });
+      }
     },
   }
 </script>

@@ -31,7 +31,6 @@ export default {
     let requestBody = {username: username, password: password};
     console.log('making post request to /login with: ', requestBody);
     return axios.post('/login', requestBody).then((response) => {
-      console.log(response);
       return response;
     }, (error) => {
       console.error(error);
@@ -41,7 +40,6 @@ export default {
 
   reAuthenticate(authToken) {
     let config = {headers: {Authorization: 'Bearer ' + authToken}};
-    console.log('making get request to /current-place, token:', authToken);
     return axios.get('/current-place', config).then((response) => {
       return response;
     }, (error) => {
@@ -71,9 +69,8 @@ export default {
       free_seats: placeTotalSeats,
       description: placeDescription,
     };
-    console.log('making post request to /places with: ', requestBody);
+
     return axios.post('/places', requestBody).then((response) => {
-      console.log(response);
       return response;
     }, (error) => {
       console.error(error);

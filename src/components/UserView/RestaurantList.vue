@@ -2,7 +2,12 @@
   <div class="columns">
     <div class="column is-10 is-offset-1">
       <h2 class="has-text-centered has-text-centered-mobile" style="margin-bottom:2vh; margin-left:2%;">Restaurants Nearby</h2>
+
       <b-loading :active="isLoading"></b-loading>
+      <div style="text-align: center">
+        <p v-show="displayPatienceMessage">Please be patient, our server was just taking a coffee break</p>
+      </div>
+
       <b-collapse
         class="card has-rounded-corners"
         v-for="res in restaurants"
@@ -11,7 +16,7 @@
         @open="toggleOpen(res.id)"
         @close="toggleOpen(res.id)"
         v-show="!isLoading"
-        style="margin: 0 2% 0.5vh 2%;"
+        style="margin: 0 2% calc(0.4vh + 3px) 2%;"
       >
         <div
           slot="trigger"
@@ -48,15 +53,18 @@
   import CompactRestaurant from "./CompactRestaurant";
   import api from "../../api/api_wrapper";
   import DetailedRestaurant from "./DetailedRestaurant";
+  import Timing from "../../utils/Timing";
 
   export default {
     name: "RestaurantList",
     components: {DetailedRestaurant, CompactRestaurant},
+
     data() {
       return {
         restaurants: [],
         opened: {},
         isLoading: true,
+        displayPatienceMessage: false,
       }
     },
 
@@ -67,6 +75,12 @@
     methods: {
       async getRestaurants() {
         this.isLoading = true;
+        let loadingTooLong = window.setTimeout(function(self) {
+          self.displayPatienceMessage = true;
+        }, 1000, this);
+
+        // await Timing.sleep(5000);
+
         await api.getPlaces().then((response) => {
           if(response && response.status === 200) {
             this.restaurants = response.data;
@@ -76,6 +90,8 @@
             console.error(response);
           }
           this.isLoading = false;
+          window.clearTimeout(loadingTooLong);
+          this.displayPatienceMessage = false;
 
           for(let i = 0; i < this.restaurants.length; i++){
             this.opened[i+1] = false;

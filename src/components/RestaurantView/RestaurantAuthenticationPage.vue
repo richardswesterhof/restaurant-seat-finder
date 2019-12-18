@@ -30,7 +30,7 @@
 
           <div class="column has-text-right is-mobile">
             <router-link to="/register">
-              <p style="margin: 1vh 1% 0 0; display:inline-block;">I don't have a restaurant account yet</p>
+              <p style="margin: 10px 1% 0 0; display:inline-block;">I don't have a restaurant account yet</p>
             </router-link>
           </div>
         </div>
@@ -66,8 +66,8 @@
 
           <div class="column has-text-right">
             <router-link to="/register">
-              <p class="is-hidden-mobile" style="margin: 1vh 1% 0 0; display:inline-block;">I don't have a restaurant account yet</p>
-              <p class="is-hidden-tablet" style="margin: 3vh 1% 0 0; display:inline-block;">Register</p>
+              <p class="is-hidden-mobile" style="margin: 5px 1% 0 0; display:inline-block;">I don't have a restaurant account yet</p>
+              <p class="is-hidden-tablet" style="margin: 15px 1% 0 0; display:inline-block;">Register</p>
             </router-link>
           </div>
         </div>

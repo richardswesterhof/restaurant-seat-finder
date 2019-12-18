@@ -2,7 +2,7 @@
   <div class="content">
     <div class="columns is-mobile">
       <div class="column is-6 is-offset-1">
-        <h4 style="font-weight: bold; margin-bottom: 1vh">Type</h4>
+        <h4 style="font-weight: bold; margin-bottom: 5px">Type</h4>
         <b-field required>
           <b-radio native-value="restaurant" v-model="placeType">
             Restaurant
@@ -105,7 +105,7 @@
           </b-input>
         </b-field>
 
-        <h4 style="font-weight: bold; margin-bottom: 1vh">Address</h4>
+        <h4 style="font-weight: bold; margin-bottom: 5px">Address</h4>
         <b-field grouped>
           <b-field label="HN" style="width: 20%">
             <b-input
@@ -185,7 +185,7 @@
         </b-field>
 
 
-        <p style="text-align:right; font-size:0.9em; margin-top: -1.2vh">Fields marked with an asterisk (*) are required</p>
+        <p style="text-align:right; font-size:0.9em; margin-top: -6px">Fields marked with an asterisk (*) are required</p>
 
         <b-field grouped>
           <b-checkbox v-model="shouldRemember">
@@ -282,7 +282,6 @@ import cookieHandler from '../../utils/CookieHandler';
             this.placeWebsite, this.placePhoneNumber, this.placeHouseNumber, this.placeStreet, this.placePostcode,
             this.placeCity, this.placeCountry, this.placeTotalSeats, this.placeDescription)
             .then((response) => {
-          console.log(response);
           if(response.status === 200 || response.status === 201) {
             this.$store.dispatch('loginSuccessful', {authToken: response.data.token, tokenLifetime: this.shouldRemember ? this.tokenLifetime : 0});
             this.$router.push({name: 'MyRestaurant', params: {authToken: response.data.token, resData: response.data.place}});
