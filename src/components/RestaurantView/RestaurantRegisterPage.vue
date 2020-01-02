@@ -57,7 +57,7 @@
           </b-input>
         </b-field>
 
-        <b-field label="Password" id="registerPasswordText">
+        <b-field label="Password" id="registerPasswordText" class="is-private-info">
           <b-input
             v-model="placePassword"
             type="password"
@@ -70,7 +70,7 @@
           </b-input>
         </b-field>
 
-        <b-field label="Repeat password" id="registerRepeatPasswordText">
+        <b-field label="Repeat password" id="registerRepeatPasswordText" class="is-private-info">
           <b-input
             v-model="placePasswordRepeat"
             type="password"

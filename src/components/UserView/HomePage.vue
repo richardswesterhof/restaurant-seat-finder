@@ -6,9 +6,10 @@
 
 <script>
   import RestaurantList from "./RestaurantList";
+  import RestaurantFilters from "./RestaurantFilters";
   export default {
     name: "HomePage",
-    components: {RestaurantList},
+    components: {RestaurantFilters, RestaurantList},
   }
 </script>
 

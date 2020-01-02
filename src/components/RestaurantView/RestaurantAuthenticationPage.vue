@@ -3,11 +3,11 @@
     <div class="columns is-mobile">
       <div class="column is-5 is-hidden-touch is-offset-1">
         <h2>{{$props.reasonMessage}}</h2>
-        <b-field label="username"  :type="authenticationFailed ? 'is-danger' : ''">
+        <b-field label="username"  :type="authenticationFailed ? 'is-danger' : ''" class="is-private-info">
           <b-input v-model="username" placeholder="username" @input="authenticationFailed = false"></b-input>
         </b-field>
 
-        <b-field label="password" :type="authenticationFailed ? 'is-danger' : ''">
+        <b-field label="password" :type="authenticationFailed ? 'is-danger' : ''" class="is-private-info">
           <b-input v-model="password" type="password" placeholder="password" password-reveal @input="authenticationFailed = false"></b-input>
         </b-field>
 

@@ -3,6 +3,15 @@
     <div class="column is-10 is-offset-1">
       <h2 class="has-text-centered has-text-centered-mobile" style="margin-bottom:2vh; margin-left:2%;">Restaurants Nearby</h2>
 
+      <RestaurantFilters
+        v-show="!isLoading"
+        :filters="filterOptions"
+        style="margin: 0 2% calc(0.4vh + 3px) 2%;"
+        v-on:filter-update="updateFilters"
+        ref="filterManager"
+      >
+      </RestaurantFilters>
+
       <b-loading :active="isLoading"></b-loading>
       <div style="text-align: center">
         <p v-show="displayPatienceMessage">Please be patient, our server was just taking a coffee break</p>
@@ -10,7 +19,7 @@
 
       <b-collapse
         class="card has-rounded-corners"
-        v-for="res in restaurants"
+        v-for="res in filteredRestaurants"
         :key="res.id"
         :open="opened[res.id]"
         @open="toggleOpen(res.id)"
@@ -43,6 +52,12 @@
           <a class="card-footer-item rest-list-footer-item" :href="res.website" target="_blank">Visit Website</a>
         </footer>
       </b-collapse>
+
+      <div v-if="filteredRestaurants.length === 0" style="margin: 0 2% calc(0.4vh + 3px) 2%;">
+        <p>Sorry, there are no restaurants that match those filters</p>
+        <p>Please try broadening your search</p>
+      </div>
+
     </div>
 
   </div>
@@ -54,14 +69,54 @@
   import api from "../../api/api_wrapper";
   import DetailedRestaurant from "./DetailedRestaurant";
   import Timing from "../../utils/Timing";
+  import RestaurantFilters from "./RestaurantFilters";
+  import FilterTypeEnum from "../../utils/enums/filterTypeEnum";
 
   export default {
     name: "RestaurantList",
-    components: {DetailedRestaurant, CompactRestaurant},
+    components: {DetailedRestaurant, CompactRestaurant, RestaurantFilters},
 
     data() {
       return {
+        FTEnum: FilterTypeEnum.enum,
+
         restaurants: [],
+        filteredRestaurants: [],
+
+        filterOptions: [
+          {
+            displayName: "Restaurant Type",
+            internalHandle: "RestaurantType",
+            type: FilterTypeEnum.enum.checkboxList,
+            options: [
+              {
+                displayName: "Restaurant",
+                value: "restaurant",
+              },
+              {
+                displayName: "Pub",
+                value: "pub",
+              },
+              {
+                displayName: "Cafe",
+                value: "cafe",
+              },
+              {
+                displayName: "Fast Food",
+                value: "fast food",
+              },
+              {
+                displayName: "Fast Casual",
+                value: "fast casual",
+              },
+              {
+                displayName: "Bar",
+                value: "bar",
+              },
+            ],
+          },
+        ],
+        selectedFilters: [],
         opened: {},
         isLoading: true,
         displayPatienceMessage: false,
@@ -84,6 +139,7 @@
         await api.getPlaces().then((response) => {
           if(response && response.status === 200) {
             this.restaurants = response.data;
+            this.filterRestaurants();
           }
           else {
             this.$buefy.toast.open({message: 'request failed with status code: ' + ((response && response.status) ? response.status : 'unknown status'), type: 'is-danger'});
@@ -123,7 +179,29 @@
           }
         });
       },
-    }
+
+
+      updateFilters() {
+        this.selectedFilters = this.$refs["filterManager"].getFilterValues();
+        this.filterRestaurants();
+      },
+
+      filterRestaurants() {
+        this.filteredRestaurants = this.restaurants;
+        let self = this;
+        this.selectedFilters.forEach(function(filter) {
+          console.log(filter);
+          if(filter.selected.length === 0) {
+            return
+          }
+
+          if(filter.internalHandle === "RestaurantType") {
+            self.filteredRestaurants = self.filteredRestaurants.filter(item => filter.selected.map(x => x.value.toLowerCase()).includes(item.type.toLowerCase()));
+          }
+        });
+        console.log(this.filteredRestaurants);
+      },
+    },
   }
 </script>
 
