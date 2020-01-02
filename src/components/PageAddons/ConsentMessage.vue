@@ -35,7 +35,7 @@
 
     methods: {
       canCollectData(bool) {
-        this.$store.dispatch('canCollectData', {tf: bool});
+        // this.$store.dispatch('canCollectData', {tf: bool});
         this.dataCollectionMessageOpen = false;
       },
     },

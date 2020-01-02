@@ -26,23 +26,24 @@
 
     computed: {
       userHasDecidedOnConsent() {
-        let collectionConsent = cookieHandler.getCookie('collectionConsent');
-        return (collectionConsent === 'true') || (collectionConsent === 'false');
+        // let collectionConsent = cookieHandler.getCookie('collectionConsent');
+        // return (collectionConsent === 'true') || (collectionConsent === 'false');
+        return true;
       },
     },
 
     mounted() {
-      let consentCookie = cookieHandler.getCookie('collectionConsent');
-      if(window._mfq === [] && consentCookie !== 'false') {
-        (function() {
-          var mf = document.createElement("script");
-          mf.type = "text/javascript"; mf.async = true;
-          mf.src = "//cdn.mouseflow.com/projects/614bc48f-503b-4d03-9f17-b5044a6a94c3.js";
-          document.getElementsByTagName("head")[0].appendChild(mf);
-        })();
-
-        window._mfq.push(['newPageView', this.$route.path]);
-      }
+      // let consentCookie = cookieHandler.getCookie('collectionConsent');
+      // if(window._mfq === [] && consentCookie !== 'false') {
+      //   (function() {
+      //     var mf = document.createElement("script");
+      //     mf.type = "text/javascript"; mf.async = true;
+      //     mf.src = "//cdn.mouseflow.com/projects/614bc48f-503b-4d03-9f17-b5044a6a94c3.js";
+      //     document.getElementsByTagName("head")[0].appendChild(mf);
+      //   })();
+      //
+      //   window._mfq.push(['newPageView', this.$route.path]);
+      // }
 
       let cookieToken = cookieHandler.getCookie('authToken', 512);
       if(cookieToken) {

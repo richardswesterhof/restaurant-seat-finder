@@ -79,38 +79,38 @@ const store = new Vuex.Store({
       cookieHandler.deleteCookie('authToken');
     },
 
-    canCollectData(state, params) {
-      state.commit('canCollectData', params.tf);
-      //only add mouseflow if the user agrees to have data collected
-      if(params.tf) {
-        (function() {
-          var mf = document.createElement("script");
-          mf.type = "text/javascript"; mf.async = true;
-          mf.src = "//cdn.mouseflow.com/projects/614bc48f-503b-4d03-9f17-b5044a6a94c3.js";
-          document.getElementsByTagName("head")[0].appendChild(mf);
-        })();
-
-        window._mfq.push(['newPageView', router.currentRoute.path]);
-      }
-
-      //add the choice to the cookies
-      cookieHandler.createCookie('collectionConsent', params.tf, 100*365);
-
-      if(process.env.NODE_ENV === 'development' && params.tf) {
-        console.log('sending newPageView: ' + router.currentRoute.path + ' to mouseflow');
-      }
-    },
+    // canCollectData(state, params) {
+    //   state.commit('canCollectData', params.tf);
+    //   //only add mouseflow if the user agrees to have data collected
+    //   if(params.tf) {
+    //     (function() {
+    //       var mf = document.createElement("script");
+    //       mf.type = "text/javascript"; mf.async = true;
+    //       mf.src = "//cdn.mouseflow.com/projects/614bc48f-503b-4d03-9f17-b5044a6a94c3.js";
+    //       document.getElementsByTagName("head")[0].appendChild(mf);
+    //     })();
+    //
+    //     window._mfq.push(['newPageView', router.currentRoute.path]);
+    //   }
+    //
+    //   //add the choice to the cookies
+    //   cookieHandler.createCookie('collectionConsent', params.tf, 100*365);
+    //
+    //   if(process.env.NODE_ENV === 'development' && params.tf) {
+    //     console.log('sending newPageView: ' + router.currentRoute.path + ' to mouseflow');
+    //   }
+    // },
   },
 });
 
 router.afterEach((to) => {
-  if(store.getters.collectData) {
-    if(process.env.NODE_ENV === 'development') {
-      console.log('sending newPageView: ' + to.path + ' to mouseflow');
-    }
-
-    window._mfq.push(['newPageView', to.path]);
-  }
+  // if(store.getters.collectData) {
+  //   if(process.env.NODE_ENV === 'development') {
+  //     console.log('sending newPageView: ' + to.path + ' to mouseflow');
+  //   }
+  //
+  //   window._mfq.push(['newPageView', to.path]);
+  // }
 });
 
 
