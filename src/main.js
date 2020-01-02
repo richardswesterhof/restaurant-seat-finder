@@ -75,7 +75,8 @@ const store = new Vuex.Store({
 
     logoutSuccessful(state) {
       state.commit('setLoggedIn', false);
-      this.dispatch('newAuthToken', {});
+      this.commit('setAuthToken', null);
+      cookieHandler.deleteCookie('authToken');
     },
 
     canCollectData(state, params) {

@@ -21,10 +21,10 @@
         <b-dropdown hoverable aria-role="list">
           <b-button class="button is-primary" @click="redirectAccountPage" v-show="loggedIn" slot="trigger">
             <span>My Restaurant</span>
-            <b-icon icon="menu-down"></b-icon>
+            <b-icon pack="fas" icon="fas fa-caret-down"></b-icon>
           </b-button>
 
-          <b-dropdown-item aria-role="listitem" @click="redirectEditAccountPage" >Edit Account</b-dropdown-item>
+          <b-dropdown-item aria-role="listitem" @click="redirectEditAccountPage">Edit Account</b-dropdown-item>
         </b-dropdown>
 
 
@@ -85,8 +85,9 @@
         if(!(this.$route.name === 'MainPage')) {
           this.$router.push('/');
         }
-        this.isLoading = false;
         this.$store.dispatch('logoutSuccessful');
+        this.isLoading = false;
+        this.$buefy.toast.open({message: 'successfully logged out', type: 'is-info'})
       }
     },
   }

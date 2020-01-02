@@ -29,7 +29,7 @@ export default {
 
   requestAuthToken(username, password) {
     let requestBody = {username: username, password: password};
-    console.log('making post request to /login with: ', requestBody);
+    console.log('making post request to /login');
     return axios.post('/login', requestBody).then((response) => {
       return response;
     }, (error) => {

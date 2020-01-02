@@ -40,7 +40,7 @@
 
 
         <footer class="card-footer">
-          <a class="card-footer-item rest-list-footer-item" href="https://google.com" target="_blank">Visit Website</a>
+          <a class="card-footer-item rest-list-footer-item" :href="res.website" target="_blank">Visit Website</a>
         </footer>
       </b-collapse>
     </div>

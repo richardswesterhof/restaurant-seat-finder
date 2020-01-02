@@ -1,9 +1,14 @@
 <template>
   <div id="app">
+    <!-- font awesome for icons-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
+
+    <!-- our components -->
     <Header></Header>
     <ConsentMessage :open-by-default="!userHasDecidedOnConsent"></ConsentMessage>
+
     <router-view id="main-router"/>
+
     <Footer></Footer>
   </div>
 </template>
