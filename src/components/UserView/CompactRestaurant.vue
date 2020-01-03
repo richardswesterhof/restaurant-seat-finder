@@ -3,7 +3,7 @@
     <span class="level-left">
       <span>{{resData.name}}</span>
       &nbsp
-      <span style="font-weight: normal; font-size:0.75em;">({{this.getResDist}})</span>
+      <span style="font-weight: normal; font-size:0.75em;" v-show="this.getResDist !== ''">({{this.getResDist}})</span>
     </span>
     <span class="level-right">
       <span :class="this.getSeatAvailability">{{resData.free_seats}}</span>
@@ -39,7 +39,13 @@
       },
 
       getResDist() {
-        let myLocation = this.$store.getters.position.coords;
+        let myLocation = this.$store.getters.position;
+        if(myLocation) {
+          myLocation = myLocation.coords;
+        }
+        else {
+          return '';
+        }
         //console.log(myLocation);
         let bernoulliborgLocation = {lat: 53.240453, long: 6.536490};
         //TODO: change this to calculate distance between the user and the restaurant
