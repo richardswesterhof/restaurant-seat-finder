@@ -95,10 +95,9 @@
           <b-input v-model=resData.description maxlength="300" type="textarea"></b-input>
         </b-field>
 
-        <button class="button is-right is-primary" @click.prevent="edit" id="registerButton">Confirm</button>
+        <button class="button is-right is-primary" @click.prevent="edit" id="confirmEditAccountButton">Confirm</button>
       </div>
 
-      <b-loading :active="isLoading"></b-loading>
     </div>
   </div>
 </template>
@@ -106,47 +105,47 @@
   import api from '../../api/api_wrapper';
   import cookieHandler from '../../utils/CookieHandler';
 
-    export default {
-        name: "RestaurantEditAccountPage",
+  export default {
+      name: "RestaurantEditAccountPage",
 
-      data() {
-        return {
-          authToken: '',
-          resData: {},
-          finishedAuthentication: false,
-          isCardModalActive: false,
-        }
-      },
+    data() {
+      return {
+        authToken: '',
+        resData: {},
+        finishedAuthentication: false,
+        isCardModalActive: false,
+      }
+    },
 
-      async beforeRouteEnter(to, from, next) {
-        let cookieToken = cookieHandler.getCookie('authToken', 512);
-        if(!(from.params.authToken || cookieToken)) {
-          next({name: 'Login', params: {reasonMessage: 'No session token found, please log in'}});
-        }
-        else {
-          api.reAuthenticate(cookieToken).then((response) => {
-            //authenticated
-            if(response.status === 200) {
-              //console.log(response);
-              next(vm => {
-                vm.authToken = from.params.authToken ? from.params.authToken : cookieToken;
-                vm.resData = response.data;
-                vm.finishedAuthentication = true;
-              });
-            }
-            //not authenticated
-            else {
-              next({name: 'Login', params: {reasonMessage: 'Your session could not be verified, please log in again'}});
-            }
-          });
-        }
-      },
+    async beforeRouteEnter(to, from, next) {
+      let cookieToken = cookieHandler.getCookie('authToken', 512);
+      if(!(from.params.authToken || cookieToken)) {
+        next({name: 'Login', params: {reasonMessage: 'No session token found, please log in'}});
+      }
+      else {
+        api.reAuthenticate(cookieToken).then((response) => {
+          //authenticated
+          if(response.status === 200) {
+            //console.log(response);
+            next(vm => {
+              vm.authToken = from.params.authToken ? from.params.authToken : cookieToken;
+              vm.resData = response.data;
+              vm.finishedAuthentication = true;
+            });
+          }
+          //not authenticated
+          else {
+            next({name: 'Login', params: {reasonMessage: 'Your session could not be verified, please log in again'}});
+          }
+        });
+      }
+    },
 
-      async mounted() {
-        await this.$nextTick();
-        this.$store.dispatch('loginSuccessful', {authToken: this.authToken});
-      },
-    }
+    async mounted() {
+      await this.$nextTick();
+      this.$store.dispatch('loginSuccessful', {authToken: this.authToken});
+    },
+  }
 </script>
 
 <style scoped>
