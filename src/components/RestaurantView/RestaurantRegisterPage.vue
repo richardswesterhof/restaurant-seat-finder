@@ -222,7 +222,7 @@ import cookieHandler from '../../utils/CookieHandler';
       isAllRequiredFieldsFilledIn() {
         for(let i = 0; i < this.requiredFields.length; i++) {
           if(!(this[this.requiredFields[i].name])) {
-            console.log(this.requiredFields[i].name + ' was not filled in');
+            console.error(this.requiredFields[i].name + ' was not filled in');
             return false;
           }
         }

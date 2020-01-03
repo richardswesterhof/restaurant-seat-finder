@@ -39,9 +39,8 @@
       },
 
       getResDist() {
-        console.log(this.$store.getters.position);
         let myLocation = this.$store.getters.position.coords;
-        console.log(myLocation);
+        //console.log(myLocation);
         let bernoulliborgLocation = {lat: 53.240453, long: 6.536490};
         //TODO: change this to calculate distance between the user and the restaurant
         let dist = DOS.calcDistOnEarth(myLocation.latitude, myLocation.longitude, bernoulliborgLocation.lat, bernoulliborgLocation.long);

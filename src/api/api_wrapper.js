@@ -6,7 +6,7 @@ import axios from 'axios';
 export default {
 
   getPlaces() {
-    console.log('making get request to /places');
+    //console.log('making get request to /places');
     return axios.get('/places').then((response) => {
       return response;
     }, (error) => {
@@ -18,7 +18,7 @@ export default {
   updateSeats(id, updatedNum, authToken) {
     let requestBody = {free_seats: updatedNum};
     let config = {headers: {Authorization: 'Bearer ' + authToken}};
-    console.log('making patch request to /places/' + id, requestBody, config);
+    //console.log('making patch request to /places/' + id, requestBody, config);
     return axios.patch('/places/' + id, requestBody, config).then((response) => {
       return response;
     }, (error) => {
@@ -29,7 +29,7 @@ export default {
 
   requestAuthToken(username, password) {
     let requestBody = {username: username, password: password};
-    console.log('making post request to /login');
+    //console.log('making post request to /login');
     return axios.post('/login', requestBody).then((response) => {
       return response;
     }, (error) => {

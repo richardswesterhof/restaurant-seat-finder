@@ -73,7 +73,7 @@
 
     methods: {
       updateSeats(newAmount) {
-        console.log('the amount of free seats will be updated to ' + newAmount);
+        //console.log('the amount of free seats will be updated to ' + newAmount);
         api.updateSeats(this.resData.id, newAmount, this.authToken).then((response) => {
           if(response.status === 200) {
             this.$buefy.toast.open({message: 'successfully updated the amount of seats to' + newAmount, type:'is-success'});

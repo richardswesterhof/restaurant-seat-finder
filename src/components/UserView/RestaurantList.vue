@@ -160,7 +160,7 @@
       },
 
       confirmUpdate(resId, amount) {
-        console.log(resId + "'s amount of seats will be updated to " + amount);
+        //console.log(resId + "'s amount of seats will be updated to " + amount);
         api.updateSeats(resId, amount).then((response) => {
           if(response && response.status === 200) {
             this.$buefy.toast.open({message: 'thank you for your contribution, the amount of free seats has been updated', type: 'is-success'});
@@ -190,7 +190,7 @@
         this.filteredRestaurants = this.restaurants;
         let self = this;
         this.selectedFilters.forEach(function(filter) {
-          console.log(filter);
+          //console.log(filter);
           if(filter.selected.length === 0) {
             return
           }
