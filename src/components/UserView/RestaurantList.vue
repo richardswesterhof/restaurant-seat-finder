@@ -199,7 +199,7 @@
             self.filteredRestaurants = self.filteredRestaurants.filter(item => filter.selected.map(x => x.value.toLowerCase()).includes(item.type.toLowerCase()));
           }
         });
-        console.log(this.filteredRestaurants);
+        //console.log(this.filteredRestaurants);
       },
     },
   }

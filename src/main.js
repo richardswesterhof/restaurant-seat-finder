@@ -32,6 +32,7 @@ const store = new Vuex.Store({
     loggedIn: false,
     authToken: null,
     collectData: false,
+    position: null,
   },
 
   mutations: {
@@ -46,6 +47,10 @@ const store = new Vuex.Store({
     canCollectData(state, bool) {
       state.collectData = bool;
     },
+
+    setPosition(state, position) {
+      state.position = position;
+    }
   },
 
   getters: {
@@ -60,6 +65,10 @@ const store = new Vuex.Store({
     collectData(state) {
       return state.collectData;
     },
+
+    position(state) {
+      return state.position;
+    }
   },
 
   actions: {
@@ -78,6 +87,10 @@ const store = new Vuex.Store({
       this.commit('setAuthToken', null);
       cookieHandler.deleteCookie('authToken');
     },
+
+    newPosition(state, params) {
+      state.commit('setPosition', params.position);
+    }
 
     // canCollectData(state, params) {
     //   state.commit('canCollectData', params.tf);

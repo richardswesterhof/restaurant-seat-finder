@@ -33,31 +33,73 @@
     },
 
     mounted() {
-      // let consentCookie = cookieHandler.getCookie('collectionConsent');
-      // if(window._mfq === [] && consentCookie !== 'false') {
-      //   (function() {
-      //     var mf = document.createElement("script");
-      //     mf.type = "text/javascript"; mf.async = true;
-      //     mf.src = "//cdn.mouseflow.com/projects/614bc48f-503b-4d03-9f17-b5044a6a94c3.js";
-      //     document.getElementsByTagName("head")[0].appendChild(mf);
-      //   })();
-      //
-      //   window._mfq.push(['newPageView', this.$route.path]);
-      // }
+      this.reauthenticate();
+      this.getLocation();
+    },
 
-      let cookieToken = cookieHandler.getCookie('authToken', 512);
-      if(cookieToken) {
-        api.reAuthenticate(cookieToken).then((response) => {
-          //authenticated
-          if(response.status === 200) {
-            this.$store.dispatch('loginSuccessful', {authToken: cookieToken});
-          }
-          //not authenticated
-          else {
-            cookieHandler.deleteCookie('authToken');
-          }
-        });
-      }
+
+    methods: {
+      enableMouseflow() {
+        // let consentCookie = cookieHandler.getCookie('collectionConsent');
+        // if(window._mfq === [] && consentCookie !== 'false') {
+        //   (function() {
+        //     var mf = document.createElement("script");
+        //     mf.type = "text/javascript"; mf.async = true;
+        //     mf.src = "//cdn.mouseflow.com/projects/614bc48f-503b-4d03-9f17-b5044a6a94c3.js";
+        //     document.getElementsByTagName("head")[0].appendChild(mf);
+        //   })();
+        //
+        //   window._mfq.push(['newPageView', this.$route.path]);
+        // }
+      },
+
+
+      reauthenticate() {
+        //try to reauthenticate the current user if possible
+        let cookieToken = cookieHandler.getCookie('authToken', 512);
+        if(cookieToken) {
+          api.reAuthenticate(cookieToken).then((response) => {
+            //authenticated
+            if(response.status === 200) {
+              this.$store.dispatch('loginSuccessful', {authToken: cookieToken});
+            }
+            //not authenticated
+            else {
+              cookieHandler.deleteCookie('authToken');
+            }
+          });
+        }
+      },
+
+
+      getLocation() {
+        if(navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition((position) => {
+            this.$store.dispatch('newPosition', {position: position});
+          }, (error) => {
+            console.error(error);
+            this.$buefy.toast.open({
+              message: 'Restaurant distances will be unavailable',
+              type: 'is-danger',
+            });
+          });
+        }
+        else {
+          this.$buefy.snackbar.open({
+            message: 'It looks like location is not available for your device',
+            type: 'is-warning',
+            position: 'is-bottom-right',
+            queue: 'false',
+            indefinite: true,
+            onAction: () => {
+              this.$buefy.toast.open({
+                message: 'Action pressed',
+                queue: false
+              });
+            }
+          });
+        }
+      },
     },
   }
 </script>
