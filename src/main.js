@@ -13,6 +13,7 @@ import './css/main.css';
 import './css/restaurantView.css';
 
 //set the baseURL for axios calls, all urls in axios will then be relative to this base
+//if we are running in production, use the production api, if we are running in development, use the local api
 axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'https://restaurant-seat-finder-api.herokuapp.com' : 'http://localhost:5000';
 
 
@@ -74,7 +75,7 @@ const store = new Vuex.Store({
   actions: {
     newAuthToken(state, params) {
       this.commit('setAuthToken', params.authToken);
-      cookieHandler.createCookie('authToken', params.authToken, params.tokenLifetime);
+      cookieHandler.createCookieIfNotExists('authToken', params.authToken, params.tokenLifetime);
     },
 
     loginSuccessful(state, params) {

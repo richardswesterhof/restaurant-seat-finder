@@ -6,12 +6,12 @@ export default {
    * @param {Number} expire: potential argument for the number of days it should remain valid,
    *                leave out for expiration after the session
    */
-  createCookie(key, value, ...expire) { //potentially has a third argument for number of days
+  createCookie(key, value, expire) { //potentially has a third argument for number of days
     //if an amount of days is given, use that,
     //otherwise assume that it should only last for the current session (0 days)
     let days = 0;
-    if(arguments.length > 2) {
-      days = arguments[2];
+    if(expire) {
+      days = expire;
     }
 
     //if an amount of days is given, we need to format it so we can store that in the cookie,
@@ -34,11 +34,11 @@ export default {
    * meaning that if the key exists but the value is different, the value will be changed
    * @param {String} key: the key of the cookie
    * @param {String} value: the value of the cookie
-   * @param {Number} expires: the amount of days before the cookie expires
+   * @param {Number} expire: the amount of days before the cookie expires
    */
-  createCookieIfNotExists(key, value, ...expires) {
+  createCookieIfNotExists(key, value, expire) {
     if(!(this.getCookie(key) === value)) {
-      this.createCookie(key, value, arguments[2]);
+      this.createCookie(key, value, expire);
     }
   },
 
@@ -48,7 +48,7 @@ export default {
    */
   deleteCookie(key) {
     if(this.getCookie(key) !== undefined) {
-      this.createCookie(key, "");
+      this.createCookie(key, "", 0);
     }
   },
 
