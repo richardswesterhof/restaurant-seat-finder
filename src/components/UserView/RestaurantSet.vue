@@ -20,10 +20,10 @@
 
       <b-tabs type="is-toggle" v-model="viewMode">
         <b-tab-item label="List View">
-          <RestaurantList v-show="!isLoading" :displayed-restaurants="filteredRestaurants"></RestaurantList>
+          <RestaurantList v-show="!isLoading" :restaurants="filteredRestaurants"></RestaurantList>
         </b-tab-item>
         <b-tab-item label="Map View">
-          <RestaurantMap v-show="!isLoading"></RestaurantMap>
+          <RestaurantMap v-show="!isLoading" :restaurants="filteredRestaurants" ref="mainMapView"></RestaurantMap>
         </b-tab-item>
       </b-tabs>
 
@@ -56,6 +56,8 @@
     data() {
       return {
         FTEnum: FilterTypeEnum.enum,
+        //this should always be the index of the mapview in the b-tabs list
+        MAPVIEW: 1,
 
         restaurants: [],
         filteredRestaurants: [],
@@ -99,6 +101,16 @@
 
         viewMode: 0,
       }
+    },
+
+    watch: {
+      viewMode(newVal, oldVal) {
+        if(newVal === this.MAPVIEW && this.$refs['mainMapView'].getMap() === null) {
+          window.setTimeout(function(mapView) {
+            mapView.makeMap();
+          }, 500, this.$refs['mainMapView']);
+        }
+      },
     },
 
     async mounted() {

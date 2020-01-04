@@ -2,7 +2,7 @@
   <div>
     <b-collapse
       class="card has-rounded-corners"
-      v-for="res in displayedRestaurants"
+      v-for="res in restaurants"
       :key="res.id"
       :open="opened[res.id]"
       @open="toggleOpen(res.id)"
@@ -45,14 +45,14 @@
     name: "RestaurantList",
     components: {CompactRestaurant, DetailedRestaurant},
     props: {
-      displayedRestaurants: {
+      restaurants: {
         type: Array,
         required: true,
       },
     },
 
     watch: {
-      displayedRestaurants(newVal, oldVal) {
+      restaurants(newVal, oldVal) {
         this.setAllOpen(false);
       },
     },
@@ -69,7 +69,7 @@
       },
 
       setAllOpen(bool) {
-        for(let i = 0; i < this.$props.displayedRestaurants.length; i++){
+        for(let i = 0; i < this.$props.restaurants.length; i++){
           this.opened[i+1] = bool;
         }
       },
