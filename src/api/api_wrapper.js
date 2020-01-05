@@ -64,6 +64,8 @@ export default {
         postcode: placePostcode,
         city: placeCity,
         country: placeCountry,
+        coord_lat: latitude,
+        coord_lon: longitude,
       },
       total_seats: placeTotalSeats,
       free_seats: placeTotalSeats,

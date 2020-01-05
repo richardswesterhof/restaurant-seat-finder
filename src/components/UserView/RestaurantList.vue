@@ -32,6 +32,7 @@
 
       <footer class="card-footer">
         <a class="card-footer-item rest-list-footer-item" :href="res.website" target="_blank">Visit Website</a>
+        <a class="card-footer-item rest-list-footer-item" @click="viewOnMapRequest(res)">View on map</a>
       </footer>
     </b-collapse>
   </div>
@@ -68,10 +69,19 @@
         this.$set(this.opened, resId, !this.opened[resId]);
       },
 
+      forceUpdateList() {
+        this.$forceUpdate();
+      },
+
       setAllOpen(bool) {
+        console.log('setting all ' + bool);
         for(let i = 0; i < this.$props.restaurants.length; i++){
-          this.opened[i+1] = bool;
+          this.$set(this.opened, this.$props.restaurants[i].id, bool);
         }
+      },
+
+      viewOnMapRequest(restaurant) {
+        this.$emit('viewOnMapRequest', restaurant);
       },
     },
   }

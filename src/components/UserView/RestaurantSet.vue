@@ -20,10 +20,10 @@
 
       <b-tabs type="is-toggle" v-model="viewMode">
         <b-tab-item label="List View">
-          <RestaurantList v-show="!isLoading" :restaurants="filteredRestaurants"></RestaurantList>
+          <RestaurantList v-show="!isLoading" :restaurants="filteredRestaurants" ref="mainListView" v-on:viewOnMapRequest="openInMapView"></RestaurantList>
         </b-tab-item>
         <b-tab-item label="Map View">
-          <RestaurantMap v-show="!isLoading" :restaurants="filteredRestaurants" ref="mainMapView"></RestaurantMap>
+          <RestaurantMap v-show="!isLoading" :restaurants="filteredRestaurants" ref="mainMapView" v-on:viewInListRequest="openInListView"></RestaurantMap>
         </b-tab-item>
       </b-tabs>
 
@@ -155,8 +155,22 @@
             self.filteredRestaurants = self.filteredRestaurants.filter(item => filter.selected.map(x => x.value.toLowerCase()).includes(item.type.toLowerCase()));
           }
         });
-        //console.log(this.filteredRestaurants);
       },
+
+      openInListView(item) {
+        this.viewMode = 0;
+        let listView = this.$refs['mainListView'];
+        console.log(listView);
+        listView.setAllOpen(false);
+        listView.toggleOpen(item.id);
+        listView.forceUpdateList();
+
+      },
+
+      openInMapView(item) {
+        this.viewMode = 1;
+        this.$refs['mainMapView'].highlight(item)
+      }
     },
   }
 </script>

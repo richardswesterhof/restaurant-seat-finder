@@ -173,7 +173,7 @@
         </b-button>
 
         <div v-show="addressOptions.length > 0">
-          <b-select placeholder="Please pick your address" style="margin-top:1%;">
+          <b-select v-model="selectedAddress" placeholder="Please pick your address" style="margin-top:1%;">
             <option
               v-for="option in addressOptions"
               :value="option"
