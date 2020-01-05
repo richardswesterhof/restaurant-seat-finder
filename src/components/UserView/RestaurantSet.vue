@@ -113,6 +113,22 @@
           }, 500, this.$refs['mainMapView']);
         }
       },
+
+      location(newVal, oldVal) {
+        if(newVal && newVal.coords) {
+          this.sortRestaurants();
+        }
+      },
+
+      restaurants(newVal, oldVal) {
+        this.sortRestaurants();
+      }
+    },
+
+    computed: {
+      location() {
+        return this.$store.getters.position;
+      }
     },
 
     async mounted() {
@@ -146,10 +162,11 @@
       updateFilters() {
         this.selectedFilters = this.$refs["filterManager"].getFilterValues();
         this.filterRestaurants();
+        this.sortRestaurants();
       },
 
       filterRestaurants() {
-        this.filteredRestaurants = this.restaurants;
+        this.filteredRestaurants = this.restaurants.slice();
         let self = this;
         this.selectedFilters.forEach(function(filter) {
           if(filter.internalHandle === "RestaurantType" && filter.selected.length > 0) {
@@ -159,20 +176,25 @@
             //ignore distance for now
           }
         });
+      },
 
+      sortRestaurants() {
+        if(!(this.location && this.location.coords)) {
+          return;
+        }
 
-        //finally sort the results by distance to the user
-        let myLocation = this.$store.getters.position.coords;
+        let self = this;
 
         function compareDist(a, b) {
-          let dista = DOS.calcDistOnEarth(myLocation.latitude, myLocation.longitude, a.address.coord_lat, a.address.coord_lon);
-          let distb = DOS.calcDistOnEarth(myLocation.latitude, myLocation.longitude, b.address.coord_lat, b.address.coord_lon);
+          let dista = DOS.calcDistOnEarth(self.location.coords.latitude, self.location.coords.longitude, a.address.coord_lat, a.address.coord_lon);
+          let distb = DOS.calcDistOnEarth(self.location.coords.latitude, self.location.coords.longitude, b.address.coord_lat, b.address.coord_lon);
 
           if(dista > distb) return 1;
           if(distb > dista) return -1;
           return 0;
         }
 
+        //finally sort the results by distance to the user
         this.filteredRestaurants = this.filteredRestaurants.sort(compareDist);
       },
 
