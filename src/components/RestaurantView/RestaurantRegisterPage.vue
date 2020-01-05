@@ -172,7 +172,7 @@
           Look up address
         </b-button>
 
-        <template v-show="addressOptions.length > 0">
+        <div v-show="addressOptions.length > 0">
           <b-select placeholder="Please pick your address" style="margin-top:1%;">
             <option
               v-for="option in addressOptions"
@@ -189,7 +189,7 @@
           >
             <p style="color:gray; text-align: right;">Help! The correct address is not in the list</p>
           </b-tooltip>
-        </template>
+        </div>
 
 
         <b-field label="Total seats" style="width: 20%; margin-top:3%;">
@@ -248,7 +248,6 @@
       isAllRequiredFieldsFilledIn() {
         for(let i = 0; i < this.requiredFields.length; i++) {
           if(!(this[this.requiredFields[i].name])) {
-            console.error(this.requiredFields[i].name + ' was not filled in');
             return false;
           }
         }
@@ -289,6 +288,7 @@
           {name: 'placeHouseNumber', id :'houseNumberRegister'},
           {name: 'placeStreet', id: 'streetRegister'},
           {name: 'placeTotalSeats', id: 'totalSeatsRegister'},
+          {name: 'selectedAddress'}
         ],
 
         //the options the user will have to select their correct address from
@@ -345,9 +345,11 @@
 
       markAllRequiredFields() {
         for(let i = 0; i < this.requiredFields.length; i++) {
-          let parent = document.getElementById(this.requiredFields[i].id).parentElement.parentElement;
-          let label = parent.getElementsByTagName('label')[0];
-          label.innerText = label.innerText + '*';
+          if(this.requiredFields[i].id) {
+            let parent = document.getElementById(this.requiredFields[i].id).parentElement.parentElement;
+            let label = parent.getElementsByTagName('label')[0];
+            label.innerText = label.innerText + '*';
+          }
         }
       },
     },
