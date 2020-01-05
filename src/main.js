@@ -91,7 +91,7 @@ const store = new Vuex.Store({
 
     newPosition(state, params) {
       state.commit('setPosition', params.position);
-    }
+    },
 
     // canCollectData(state, params) {
     //   state.commit('canCollectData', params.tf);

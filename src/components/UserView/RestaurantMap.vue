@@ -53,12 +53,14 @@
         this.map = L.map('restaurantMainMap', {
           center: this.highlighted ? [this.highlighted.address.coord_lat, this.highlighted.address.coord_lon] : [myCoords.latitude, myCoords.longitude],
           zoom: 13,
+          worldCopyJump: true,
         });
 
         //add tiles to the shell, these are the actual map images
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
           attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>, Coordinates by <a href="https://www.locationiq.com/">LocationIQ</a>',
-          minZoom: 8,
+          minZoom: 3,
+          maxZoom: 18,
           id: 'mapbox/streets-v11',
           accessToken: tokens.mapboxToken,
           //these options make the scaling of the text a bit nicer
