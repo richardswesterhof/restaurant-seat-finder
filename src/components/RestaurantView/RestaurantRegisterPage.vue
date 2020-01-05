@@ -13,10 +13,10 @@
           <b-radio native-value="pub" v-model="placeType">
             Pub/Bar
           </b-radio>
-          <b-radio native-value="fast-food" v-model="placeType">
+          <b-radio native-value="fast food" v-model="placeType">
             Fast food
           </b-radio>
-          <b-radio native-value="fast-casual" v-model="placeType">
+          <b-radio native-value="fast casual" v-model="placeType">
             Fast casual
           </b-radio>
         </b-field>
@@ -168,7 +168,31 @@
           </b-field>
         </b-field>
 
-        <b-field label="Total seats" style="width: 20%">
+        <b-button class="button is-primary" @click="lookupCoords" style="margin-top:-2%">
+          Look up address
+        </b-button>
+
+        <template v-show="addressOptions.length > 0">
+          <b-select placeholder="Please pick your address" style="margin-top:1%;">
+            <option
+              v-for="option in addressOptions"
+              :value="option"
+              :key="option.place_id"
+            >
+              {{option.display_name}}
+            </option>
+          </b-select>
+
+          <b-tooltip
+            label="try to be more specific and make sure that your address details do not contain any typos"
+            :delay="300"
+          >
+            <p style="color:gray; text-align: right;">Help! The correct address is not in the list</p>
+          </b-tooltip>
+        </template>
+
+
+        <b-field label="Total seats" style="width: 20%; margin-top:3%;">
           <b-input
             v-model="placeTotalSeats"
             type="number"
@@ -208,8 +232,10 @@
 </template>
 
 <script>
-import api from '../../api/api_wrapper';
-import cookieHandler from '../../utils/CookieHandler';
+  import api from '../../api/api_wrapper';
+  import thirdPartyApi from '../../api/thirdparty_api_requests';
+  import cookieHandler from '../../utils/CookieHandler';
+  import tokens from "../../top_secret_files/tokenList";
 
   export default {
     name: "RestaurantRegisterPage",
@@ -264,6 +290,10 @@ import cookieHandler from '../../utils/CookieHandler';
           {name: 'placeStreet', id: 'streetRegister'},
           {name: 'placeTotalSeats', id: 'totalSeatsRegister'},
         ],
+
+        //the options the user will have to select their correct address from
+        addressOptions: [],
+        selectedAddress: null,
       }
     },
 
@@ -272,6 +302,27 @@ import cookieHandler from '../../utils/CookieHandler';
     },
 
     methods: {
+      lookupCoords() {
+        if(!(this.placeStreet && this.placeHouseNumber)) {
+          this.$buefy.toast.open({message: 'please fill in a street and a house number', type: 'is-danger'});
+          return;
+        }
+
+        //first clear the old selected address
+        this.selectedAddress = null;
+
+        //for some reason our third party api does not like postcodes, so that is not included here
+        let params = [this.placeHouseNumber, this.placeStreet, this.placeCity, this.placeCountry].filter(x => x);
+        thirdPartyApi.getCoords(params, tokens.locationIqToken).then((response) => {
+          if(response.status === 200) {
+            this.addressOptions = response.data;
+          }
+          else {
+            this.$buefy.toast.open({message: 'something went wrong when looking up the address, status: ' + status, type: 'is-danger'});
+          }
+        });
+      },
+
       register() {
         if(!(this.isAllRequiredFieldsFilledIn) || !(this.placePassword === this.placePasswordRepeat)) {
           this.$buefy.toast.open({message: 'please fill in all required fields', type: 'is-danger'});
@@ -280,7 +331,7 @@ import cookieHandler from '../../utils/CookieHandler';
 
         api.register(this.placeType, this.placeName, this.placeUsername, this.placeEmail, this.placePassword,
             this.placeWebsite, this.placePhoneNumber, this.placeHouseNumber, this.placeStreet, this.placePostcode,
-            this.placeCity, this.placeCountry, this.placeTotalSeats, this.placeDescription)
+            this.placeCity, this.placeCountry, this.selectedAddress.lat, this.selectedAddress.lon, this.placeTotalSeats, this.placeDescription)
             .then((response) => {
           if(response.status === 200 || response.status === 201) {
             this.$store.dispatch('loginSuccessful', {authToken: response.data.token, tokenLifetime: this.shouldRemember ? this.tokenLifetime : 0});

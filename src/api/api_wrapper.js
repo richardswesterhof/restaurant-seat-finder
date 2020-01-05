@@ -49,7 +49,7 @@ export default {
   },
 
   register(placeType, placeName, placeUserName, placeEmail, placePassword, placeWebsite, placePhoneNumber, placeHouseNumber,
-      placeStreet, placePostcode, placeCity, placeCountry, placeTotalSeats, placeDescription) {
+      placeStreet, placePostcode, placeCity, placeCountry, latitude, longitude, placeTotalSeats, placeDescription) {
     let requestBody = {
       type: placeType,
       name: placeName,

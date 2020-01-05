@@ -73,7 +73,7 @@
                 value: "restaurant",
               },
               {
-                displayName: "Pub",
+                displayName: "Pub/Bar",
                 value: "pub",
               },
               {
@@ -87,10 +87,6 @@
               {
                 displayName: "Fast Casual",
                 value: "fast casual",
-              },
-              {
-                displayName: "Bar",
-                value: "bar",
               },
             ],
           },
