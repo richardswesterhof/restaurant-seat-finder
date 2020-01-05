@@ -1,18 +1,18 @@
 <template>
   <div>
-    <div>
-      <h2 class="rest-view-heading">{{resData ? resData.name : 'invalid restaurant name'}}</h2>
+    <div style="text-align: center;">
+      <h2 class="rest-view-heading" style="text-align:center;">{{resData ? resData.name : 'invalid restaurant name'}}</h2>
       <h3>Amount of free seats:</h3>
     </div>
 
-    <div style="text-align: right; margin-right: calc(4% + 50px);">
-      <b-icon
-        pack="fas"
-        icon="fas fa-user-circle"
-        class="is-primary-color rest-view-account-manage-icon"
-      >
-      </b-icon>
-    </div>
+<!--    <div style="text-align: right; margin-right: calc(4% + 50px);">-->
+<!--      <b-icon-->
+<!--        pack="fas"-->
+<!--        icon="fas fa-user-circle"-->
+<!--        class="is-primary-color rest-view-account-manage-icon"-->
+<!--      >-->
+<!--      </b-icon>-->
+<!--    </div>-->
 
     <RestaurantSeatCounter
       v-if="finishedAuthentication"

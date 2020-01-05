@@ -1,8 +1,9 @@
 <template>
   <footer class="footer has-text-left">
     <div class="content">
-      <p class="font-header" id="footerSelfLink" style="font-size: 1em; font-weight: bold">This page: <a href="https://ress-restaurant-seat-finder.herokuapp.com">ress-restaurant-seat-finder.herokuapp.com</a></p>
-      <p class="font-header" id="footerFeedbackLink" style="font-size: 1em; font-weight: bold">If you have any feedback, please leave it here: </p>
+      <p class="font-header footer-text" id="footerSelfLink">This page: <a href="https://ress-restaurant-seat-finder.herokuapp.com">ress-restaurant-seat-finder.herokuapp.com</a></p>
+<!--      <p class="font-header" id="footerFeedbackLink" style="font-size: 1em; font-weight: bold">If you have any feedback, please leave it here: </p>-->
+      <p class="font-header footer-text"></p>
     </div>
   </footer>
 </template>
@@ -23,6 +24,10 @@
     background-image: url("../../assets/background4.jpg");
     background-repeat:no-repeat;
     background-size:cover;
+  }
+
+  .footer-text {
+    font-size: 1em; font-weight: bold;
   }
 
 </style>

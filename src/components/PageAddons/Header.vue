@@ -2,36 +2,36 @@
   <header class="header has-text-centered">
     <div class="columns is-mobile">
       <div class="column content font-header">
-        <router-link tag="p" to="/" style="display:inline-block; cursor: pointer;">
+        <router-link tag="p" to="/" style="display:inline-block; cursor: pointer; margin-top: 14px">
           <p id="headerContent">Restaurant Seat Finder</p>
         </router-link>
       </div>
 
       <div class="column has-text-right" style="margin-right: 5%">
-        <b-field grouped position="is-right">
-        <b-button class="button is-primary" style="margin-right: 2%" @click="redirectLogin" v-show="!loggedIn">
-          Login
-        </b-button>
-        <b-button class="button is-primary" @click="redirectRegister" v-show="!loggedIn">
-          Register
-        </b-button>
+        <b-field grouped position="is-right" style="margin-top:1.5%;">
+          <b-button class="button is-primary" style="margin-right: 2%" @click="redirectLogin" v-show="!loggedIn">
+            Log in
+          </b-button>
+          <b-button class="button is-primary" @click="redirectRegister" v-show="!loggedIn">
+            Register
+          </b-button>
         </b-field>
 
-        <b-field grouped position="is-right">
-        <b-dropdown hoverable aria-role="list">
-          <b-button class="button is-primary" @click="redirectAccountPage" v-show="loggedIn" slot="trigger">
-            <span>My Restaurant</span>
-            <b-icon pack="fas" icon="fas fa-caret-down"></b-icon>
+        <b-field grouped position="is-right" style="margin-top:-1.5%">
+          <b-dropdown hoverable aria-role="list">
+            <b-button class="button is-primary" @click="redirectAccountPage" v-show="loggedIn" slot="trigger">
+              <span>My Restaurant</span>
+              <b-icon pack="fas" icon="fas fa-caret-down"></b-icon>
+            </b-button>
+
+            <b-dropdown-item aria-role="listitem" @click="redirectEditAccountPage">Edit Account</b-dropdown-item>
+          </b-dropdown>
+
+
+          <b-button class="button is-primary" style="margin-left: 2%" @click="logout" v-show="loggedIn">
+            Log out
           </b-button>
-
-          <b-dropdown-item aria-role="listitem" @click="redirectEditAccountPage">Edit Account</b-dropdown-item>
-        </b-dropdown>
-
-
-        <b-button class="button is-primary" style="margin-left: 2%" @click="logout" v-show="loggedIn">
-          Log out
-        </b-button>
-      </b-field>
+        </b-field>
 
       </div>
       <b-loading :active="isLoading"></b-loading>

@@ -4,7 +4,7 @@
       Filters:
     </h3>
 
-    <template v-for="filter in filters">
+    <template v-for="filter in filterValues">
       <div>
         <div class="block" v-if="filter.type === FTEnum.radioButton">
           <b-radio
@@ -42,8 +42,11 @@
           (input field)
         </div>
 
-        <div v-else-if="filter.type === FTEnum.slider">
-          (slider)
+        <div v-else-if="filter.type === FTEnum.slider" class="columns">
+          <b-field class="column is-half-desktop is-three-fifths-tablet is-full-mobile" grouped>
+            <b-slider v-model="filter.value" lazy rounded :min="1" :max="50"></b-slider>
+            <p style="margin: 1.2% 0 0 calc(2% + 5px); white-space: nowrap;">{{filter.value}} kilometers</p>
+          </b-field>
         </div>
 
         <div v-else>
@@ -100,20 +103,14 @@
         this.notifyParent();
       },
 
-
-
       notifyParent() {
         this.$emit("filter-update");
       },
-
-
 
       getFilterValues() {
         return this.filterValues;
       },
     },
-
-
   }
 </script>
 

@@ -91,6 +91,11 @@
               },
             ],
           },
+          // {
+          //   displayName: "Max Distance",
+          //   internalHandle: "MaxDistance",
+          //   type: FilterTypeEnum.enum.slider,
+          // },
         ],
         selectedFilters: [],
         isLoading: true,
@@ -147,10 +152,11 @@
         this.filteredRestaurants = this.restaurants;
         let self = this;
         this.selectedFilters.forEach(function(filter) {
-          if(filter.selected.length === 0) {
-          }
-          else if(filter.internalHandle === "RestaurantType") {
+          if(filter.internalHandle === "RestaurantType" && filter.selected.length > 0) {
             self.filteredRestaurants = self.filteredRestaurants.filter(item => filter.selected.map(x => x.value.toLowerCase()).includes(item.type.toLowerCase()));
+          }
+          else if(filter.internalHandle === "MaxDistance") {
+            //ignore distance for now
           }
         });
 
@@ -173,7 +179,6 @@
       openInListView(item) {
         this.viewMode = 0;
         let listView = this.$refs['mainListView'];
-        console.log(listView);
         listView.setAllOpen(false);
         listView.toggleOpen(item.id);
         listView.forceUpdateList();
