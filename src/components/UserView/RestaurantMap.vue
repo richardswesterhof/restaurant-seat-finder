@@ -86,7 +86,14 @@
         let self = this;
         this.clearMarkers();
 
-        let selfMarker = {id: 'self', marker: L.marker([myCoords.latitude, myCoords.longitude]).addTo(self.map)};
+        let selfIcon = L.icon({
+          iconUrl: './static/map_marker-red-small.png',
+          iconSize: [25, 41],
+          iconAnchor: [13, 40],
+          popupAnchor: [0, -32],
+        });
+
+        let selfMarker = {id: 'self', marker: L.marker([myCoords.latitude, myCoords.longitude], {icon: selfIcon}).addTo(self.map)};
         selfMarker.popup = selfMarker.marker.bindPopup('Hey, that\'s you!');
         this.restaurantMarkers.push(selfMarker);
 
