@@ -74,7 +74,6 @@
       },
 
       setAllOpen(bool) {
-        console.log('setting all ' + bool);
         for(let i = 0; i < this.$props.restaurants.length; i++){
           this.$set(this.opened, this.$props.restaurants[i].id, bool);
         }

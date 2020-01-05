@@ -48,6 +48,7 @@
   import FilterTypeEnum from "../../utils/enums/filterTypeEnum";
   import RestaurantMap from "./RestaurantMap";
   import RestaurantList from "./RestaurantList";
+  import DOS from "../../utils/DistanceOnSphere";
 
   export default {
     name: "RestaurantSet",
@@ -146,15 +147,27 @@
         this.filteredRestaurants = this.restaurants;
         let self = this;
         this.selectedFilters.forEach(function(filter) {
-          //console.log(filter);
           if(filter.selected.length === 0) {
-            return
           }
-
-          if(filter.internalHandle === "RestaurantType") {
+          else if(filter.internalHandle === "RestaurantType") {
             self.filteredRestaurants = self.filteredRestaurants.filter(item => filter.selected.map(x => x.value.toLowerCase()).includes(item.type.toLowerCase()));
           }
         });
+
+
+        //finally sort the results by distance to the user
+        let myLocation = this.$store.getters.position.coords;
+
+        function compareDist(a, b) {
+          let dista = DOS.calcDistOnEarth(myLocation.latitude, myLocation.longitude, a.address.coord_lat, a.address.coord_lon);
+          let distb = DOS.calcDistOnEarth(myLocation.latitude, myLocation.longitude, b.address.coord_lat, b.address.coord_lon);
+
+          if(dista > distb) return 1;
+          if(distb > dista) return -1;
+          return 0;
+        }
+
+        this.filteredRestaurants = this.filteredRestaurants.sort(compareDist);
       },
 
       openInListView(item) {
@@ -164,12 +177,11 @@
         listView.setAllOpen(false);
         listView.toggleOpen(item.id);
         listView.forceUpdateList();
-
       },
 
       openInMapView(item) {
         this.viewMode = 1;
-        this.$refs['mainMapView'].highlight(item)
+        this.$refs['mainMapView'].highlight(item);
       }
     },
   }
