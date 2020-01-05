@@ -1,15 +1,15 @@
 <template>
   <div class="content">
-    <RestaurantList></RestaurantList>
+    <RestaurantSet></RestaurantSet>
   </div>
 </template>
 
 <script>
-  import RestaurantList from "./RestaurantList";
+  import RestaurantSet from "./RestaurantSet";
   import RestaurantFilters from "./RestaurantFilters";
   export default {
     name: "HomePage",
-    components: {RestaurantFilters, RestaurantList},
+    components: {RestaurantFilters, RestaurantSet},
   }
 </script>
 
