@@ -16,7 +16,7 @@
               <b-field label="Your Password" id="passwordText">
                 <b-input
                   v-model="placePassword"
-                  id="password"
+                  id="oldPassword"
                   rounded
                   placeholder = "Your password"
                 >
@@ -25,7 +25,7 @@
               <b-field label="New Password" id="newPasswordText">
                 <b-input
                   v-model="placeNewPassword"
-                  id="newPassword"
+                  id="newPasswordUpdate"
                   rounded
                   placeholder = "New password"
                 >
@@ -49,7 +49,7 @@
         <b-field label="Restaurant Name" id="registerNameText">
           <b-input
             v-model=resData.name
-            id="nameRegister"
+            id="nameUpdate"
             rounded
           >
           </b-input>
@@ -58,7 +58,7 @@
         <b-field label="Email" id="registerEmailText">
           <b-input
             v-model=resData.email
-            id="emailRegister"
+            id="emailUpdate"
             rounded
           >
           </b-input>
@@ -76,7 +76,7 @@
         <b-field label="Restaurant phone number" id="phoneNumberText">
           <b-input
             v-model=resData.address.house_number
-            id="phoneRegister"
+            id="phoneUpdate"
             rounded
           >
           </b-input>
@@ -85,7 +85,7 @@
         <b-field label="Total seats" style="width: 20%">
           <b-input
             v-model=resData.total_seats
-            id="totalSeatsRegister"
+            id="totalSeatsUpdate"
             rounded
           >
           </b-input>
@@ -95,7 +95,8 @@
           <b-input v-model=resData.description maxlength="300" type="textarea"></b-input>
         </b-field>
 
-        <button class="button is-right is-primary" @click.prevent="edit" id="registerButton">Confirm</button>
+        <button class="button is-right is-primary" @click.prevent="update" id="editButton">Confirm</button>
+        <button class="button is-right is-primary" @click.prevent="deleteAccount" style="margin-left: 1%" id="deleteButton">Delete Account</button>
       </div>
 
       <b-loading :active="isLoading"></b-loading>
@@ -115,6 +116,15 @@
           resData: {},
           finishedAuthentication: false,
           isCardModalActive: false,
+
+          requiredFields: [
+            {id: 'nameUpdate'},
+            {id: 'emailUpdate'},
+            {id: 'oldPassword'},
+            {id: 'newPasswordUpdate'},
+            {id :'phoneUpdate'},
+            {id: 'totalSeatsUpdate'},
+          ],
         }
       },
 
@@ -146,6 +156,15 @@
         await this.$nextTick();
         this.$store.dispatch('loginSuccessful', {authToken: this.authToken});
       },
+
+      methods: {
+          update(){
+            api.
+          },
+        deleteAccount(){
+
+        }
+      }
     }
 </script>
 
