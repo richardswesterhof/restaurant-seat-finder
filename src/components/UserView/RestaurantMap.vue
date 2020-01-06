@@ -54,15 +54,14 @@
           center: this.highlighted ? [this.highlighted.address.coord_lat, this.highlighted.address.coord_lon] : [myCoords.latitude, myCoords.longitude],
           zoom: 13,
           worldCopyJump: true,
+          maxBoundsViscosity: 1.0,
         });
-
-        console.log('map created');
 
         //add tiles to the shell, these are the actual map images
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
           attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>, Coordinates by <a href="https://www.locationiq.com/">LocationIQ</a>',
-          minZoom: 1,
-          maxZoom: 18,
+          minZoom: 2,
+          maxZoom: 22,
           id: 'mapbox/streets-v11',
           accessToken: tokens.mapboxToken,
           //these options make the scaling of the text a bit nicer
@@ -75,9 +74,31 @@
           self.mapError = true;
         }).addTo(this.map);
 
-        // if(this.highlighted) {
-        //   this.highlighted.popup.openOn(map);
-        // }
+
+        let centerControl = L.Control.extend({
+          options: {
+            position: 'topright',
+          },
+
+          onAdd: function(map) {
+            let container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom has-text-centered');
+            let content = L.DomUtil.create('p', 'center', container);
+            content.innerHTML = 'center map';
+            content.style.whiteSpace = 'nowrap';
+            content.style.fontSize = '120%';
+
+            container.style.backgroundColor = 'white';
+            container.style.width = '100px';
+            container.style.height = '32px';
+            container.style.cursor = 'pointer';
+            container.onclick = function(){
+              self.centerMap();
+            };
+            return container;
+          }
+        });
+
+        this.map.addControl(new centerControl);
 
         this.drawRestaurantsOnMap();
       },
@@ -142,12 +163,10 @@
       },
 
       highlight(restaurant, noRecursion) {
-        console.log('highlighting ', restaurant);
         this.highlighted = restaurant;
         if(this.map) {
           this.map.setView([restaurant.address.coord_lat, restaurant.address.coord_lon], 17);
           let marker = this.restaurantMarkers.find(marker => marker.id === restaurant.id);
-          console.log(marker.popup.getLatLng());
           if(marker && marker.popup) {
             window.setTimeout(function(self) {
               marker.popup.openOn(self.map);
@@ -160,6 +179,11 @@
           }
           window.setTimeout(this.highlight, 750, restaurant, true);
         }
+      },
+
+      centerMap() {
+        let myCoords = this.$store.getters.position.coords;
+        this.map.setView([myCoords.latitude, myCoords.longitude]);
       },
     },
   }
