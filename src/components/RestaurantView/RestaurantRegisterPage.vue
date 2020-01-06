@@ -324,7 +324,7 @@
       },
 
       register() {
-        if(!(this.isAllRequiredFieldsFilledIn) || !(this.placePassword === this.placePasswordRepeat)) {
+        if(!this.isAllRequiredFieldsFilledIn || !(this.placePassword === this.placePasswordRepeat) || !this.selectedAddress) {
           this.$buefy.toast.open({message: 'please fill in all required fields', type: 'is-danger'});
           return;
         }
