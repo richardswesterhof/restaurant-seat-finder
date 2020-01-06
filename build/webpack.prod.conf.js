@@ -32,7 +32,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       //TODO: changed here!!!!!!!
       //original: 'process.env': env
-      'process.env': merge(env, process.env),
+      'process.env.NODE_ENV': env.NODE_ENV,
     }),
     new UglifyJsPlugin({
       uglifyOptions: {
