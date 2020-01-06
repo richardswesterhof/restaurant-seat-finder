@@ -13,8 +13,6 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const env = require('../config/prod.env')
 
-console.log('webpack.prod.conf.js', process.env);
-
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({
@@ -32,7 +30,13 @@ const webpackConfig = merge(baseWebpackConfig, {
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
-      'process.env': env
+      'process.env' : merge(env,
+        Object.keys(process.env).reduce((env, key) => {
+          env[key] = JSON.stringify(process.env[key]);
+          return env;
+        }, {}))
+
+      //'process.env': env
     }),
     new UglifyJsPlugin({
       uglifyOptions: {
