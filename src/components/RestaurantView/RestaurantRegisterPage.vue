@@ -169,7 +169,7 @@
         </b-field>
 
         <b-button class="button is-primary" @click="lookupCoords" style="margin-top:-2%">
-          Look up address
+          Verify address
         </b-button>
 
         <div v-show="addressOptions.length > 0">

@@ -81,20 +81,10 @@
           },
 
           onAdd: function(map) {
-            let container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom has-text-centered');
-            let content = L.DomUtil.create('p', 'center', container);
-            content.innerHTML = 'center map';
-            content.style.whiteSpace = 'nowrap';
-            content.style.fontSize = '120%';
-
-            container.style.backgroundColor = 'white';
-            container.style.width = '100px';
-            container.style.height = '32px';
-            container.style.cursor = 'pointer';
-            container.onclick = function(){
-              self.centerMap();
-            };
-            return container;
+            let button = L.DomUtil.create('button', 'leaflet0bar leaflet-control leaflet-control-custom button');
+            button.innerHTML = 'center map';
+            button.onclick = self.centerMap;
+            return button;
           }
         });
 
