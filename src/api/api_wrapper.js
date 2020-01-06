@@ -6,7 +6,7 @@ import axios from 'axios';
 export default {
 
   getPlaces() {
-    console.log('making get request to /places');
+    //console.log('making get request to /places');
     return axios.get('/places').then((response) => {
       return response;
     }, (error) => {
@@ -18,7 +18,7 @@ export default {
   updateSeats(id, updatedNum, authToken) {
     let requestBody = {free_seats: updatedNum};
     let config = {headers: {Authorization: 'Bearer ' + authToken}};
-    console.log('making patch request to /places/' + id, requestBody, config);
+    //console.log('making patch request to /places/' + id, requestBody, config);
     return axios.patch('/places/' + id, requestBody, config).then((response) => {
       return response;
     }, (error) => {
@@ -29,9 +29,8 @@ export default {
 
   requestAuthToken(username, password) {
     let requestBody = {username: username, password: password};
-    console.log('making post request to /login with: ', requestBody);
+    //console.log('making post request to /login');
     return axios.post('/login', requestBody).then((response) => {
-      console.log(response);
       return response;
     }, (error) => {
       console.error(error);
@@ -41,7 +40,6 @@ export default {
 
   reAuthenticate(authToken) {
     let config = {headers: {Authorization: 'Bearer ' + authToken}};
-    console.log('making get request to /current-place, token:', authToken);
     return axios.get('/current-place', config).then((response) => {
       return response;
     }, (error) => {
@@ -51,7 +49,7 @@ export default {
   },
 
   register(placeType, placeName, placeUserName, placeEmail, placePassword, placeWebsite, placePhoneNumber, placeHouseNumber,
-      placeStreet, placePostcode, placeCity, placeCountry, placeTotalSeats, placeDescription) {
+      placeStreet, placePostcode, placeCity, placeCountry, latitude, longitude, placeTotalSeats, placeDescription) {
     let requestBody = {
       type: placeType,
       name: placeName,
@@ -66,14 +64,15 @@ export default {
         postcode: placePostcode,
         city: placeCity,
         country: placeCountry,
+        coord_lat: latitude,
+        coord_lon: longitude,
       },
       total_seats: placeTotalSeats,
       free_seats: placeTotalSeats,
       description: placeDescription,
     };
-    console.log('making post request to /places with: ', requestBody);
+
     return axios.post('/places', requestBody).then((response) => {
-      console.log(response);
       return response;
     }, (error) => {
       console.error(error);

@@ -1,9 +1,9 @@
 <template>
-  <div class="level" style="margin-bottom: -0.33%">
+  <div class="level" style="margin-bottom: -0.33vh">
     <span class="level-left">
       <span>{{resData.name}}</span>
       &nbsp
-      <span style="font-weight: normal; font-size:0.75em;">({{this.getResDist}})</span>
+      <span style="font-weight: normal; font-size:0.75em;" v-show="this.getResDist !== ''">({{this.getResDist}})</span>
     </span>
     <span class="level-right">
       <span :class="this.getSeatAvailability">{{resData.free_seats}}</span>
@@ -14,6 +14,8 @@
 </template>
 
 <script>
+  import DOS from "../../utils/DistanceOnSphere";
+
   export default {
     name: "CompactRestaurant",
     props: {
@@ -37,8 +39,16 @@
       },
 
       getResDist() {
-        //TODO: implement google maps api to get the distance between us and the restaurant
-        return '1 km';
+        let myLocation = this.$store.getters.position;
+        if(myLocation) {
+          myLocation = myLocation.coords;
+        }
+        else {
+          return '';
+        }
+
+        let dist = DOS.calcDistOnEarth(myLocation.latitude, myLocation.longitude, this.$props.resData.address.coord_lat, this.$props.resData.address.coord_lon);
+        return dist.toFixed(2) + ' km';
       }
     },
   }

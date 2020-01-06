@@ -1,18 +1,18 @@
 <template>
   <div>
-    <div>
-      <h2 class="rest-view-heading">{{resData ? resData.name : 'invalid restaurant name'}}</h2>
+    <div style="text-align: center;">
+      <h2 class="rest-view-heading" style="text-align:center;">{{resData ? resData.name : 'invalid restaurant name'}}</h2>
       <h3>Amount of free seats:</h3>
     </div>
 
-    <div style="text-align: right; margin-right: calc(4% + 50px);">
-      <b-icon
-        pack="fas"
-        icon="fas fa-user-circle"
-        class="is-primary-color rest-view-account-manage-icon"
-      >
-      </b-icon>
-    </div>
+<!--    <div style="text-align: right; margin-right: calc(4% + 50px);">-->
+<!--      <b-icon-->
+<!--        pack="fas"-->
+<!--        icon="fas fa-user-circle"-->
+<!--        class="is-primary-color rest-view-account-manage-icon"-->
+<!--      >-->
+<!--      </b-icon>-->
+<!--    </div>-->
 
     <RestaurantSeatCounter
       v-if="finishedAuthentication"
@@ -45,7 +45,6 @@
 
     async beforeRouteEnter(to, from, next) {
       let cookieToken = cookieHandler.getCookie('authToken', 512);
-      console.log(cookieToken);
       if(!(from.params.authToken || cookieToken)) {
         next({name: 'Login', params: {reasonMessage: 'No session token found, please log in'}});
       }
@@ -53,7 +52,6 @@
         api.reAuthenticate(cookieToken).then((response) => {
           //authenticated
           if(response.status === 200) {
-            console.log(response);
             next(vm => {
               vm.authToken = from.params.authToken ? from.params.authToken : cookieToken;
               vm.resData = response.data;
@@ -75,10 +73,10 @@
 
     methods: {
       updateSeats(newAmount) {
-        console.log('the amount of free seats will be updated to ' + newAmount);
+        //console.log('the amount of free seats will be updated to ' + newAmount);
         api.updateSeats(this.resData.id, newAmount, this.authToken).then((response) => {
           if(response.status === 200) {
-            this.$buefy.toast.open({message: 'successfully updated the amount of seats to' + newAmount, type:'is-success'});
+            this.$buefy.toast.open({message: 'successfully updated the amount of seats to ' + newAmount, type:'is-success'});
           }
           else {
             this.$buefy.toast.open({message: 'could not update the amount of seats: ' + ((response && response.data && response.data.message) ? response.data.message : '')});
