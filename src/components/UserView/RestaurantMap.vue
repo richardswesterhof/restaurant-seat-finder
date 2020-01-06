@@ -56,10 +56,12 @@
           worldCopyJump: true,
         });
 
+        console.log('map created');
+
         //add tiles to the shell, these are the actual map images
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
           attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>, Coordinates by <a href="https://www.locationiq.com/">LocationIQ</a>',
-          minZoom: 3,
+          minZoom: 1,
           maxZoom: 18,
           id: 'mapbox/streets-v11',
           accessToken: tokens.mapboxToken,
@@ -100,7 +102,7 @@
         this.restaurantMarkers.push(selfMarker);
 
         this.$props.restaurants.forEach(function(item, index) {
-          let restaurantPopup = L.popup();
+          let restaurantPopup = L.popup().setLatLng([item.address.coord_lat, item.address.coord_lon]);
 
           let popupContent = L.DomUtil.create('div');
           popupContent.style= 'text-align: center';
@@ -139,12 +141,24 @@
         this.$emit('viewInListRequest', item);
       },
 
-      highlight(restaurant) {
-        console.log(restaurant);
+      highlight(restaurant, noRecursion) {
+        console.log('highlighting ', restaurant);
         this.highlighted = restaurant;
         if(this.map) {
-          this.map.setView([restaurant.address.coord_lat, restaurant.address.coord_lon]);
-          console.log(this.restaurantMarkers.find(marker => marker.id === restaurant.id).popup)//.openOn(this.map);
+          this.map.setView([restaurant.address.coord_lat, restaurant.address.coord_lon], 17);
+          let marker = this.restaurantMarkers.find(marker => marker.id === restaurant.id);
+          console.log(marker.popup.getLatLng());
+          if(marker && marker.popup) {
+            window.setTimeout(function(self) {
+              marker.popup.openOn(self.map);
+            }, 500, this);
+          }
+        }
+        else {
+          if(noRecursion) {
+            return;
+          }
+          window.setTimeout(this.highlight, 750, restaurant, true);
         }
       },
     },
