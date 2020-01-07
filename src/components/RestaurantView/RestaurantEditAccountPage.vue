@@ -197,9 +197,8 @@
     },
 
     methods: {
-
-     async deleteAccount(resId){
-       await this.$nextTick();
+      async deleteAccount(resId){
+        await this.$nextTick();
         console.log("Deleted");
         api.deleteAccount(resId, this.authToken).then((response) => {
           if(response && response.status === 200) {
@@ -216,7 +215,7 @@
       },
 
       async updatePassword(resId, oldPassword) {
-       await this.$nextTick();
+        await this.$nextTick();
         console.log("Update password");
           if(!(this.placeNewPassword === this.placeRepeatNewPassword)){
           this.$buefy.toast.open({message: 'Passwords do not match. Please, try again.', type: 'is-danger'});

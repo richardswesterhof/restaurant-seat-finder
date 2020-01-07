@@ -2,7 +2,7 @@
   <div class="columns" style="margin-bottom: -16px;">
     <div class="column">
       <span>{{resData.name}}</span>
-      <span style="font-weight: normal; font-size:75%;" v-show="this.getResDist !== ''">({{this.getResDist}})</span>
+      <span style="font-weight: normal; font-size:75%; white-space: nowrap;" v-show="this.getResDist !== ''">({{this.getResDist}})</span>
       <br>
       <span style="font-weight: normal; font-size:90%; font-style:italic;">{{resData.type}}</span>
     </div>
