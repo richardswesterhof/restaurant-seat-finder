@@ -2,8 +2,17 @@
   <header class="header has-text-centered">
     <div class="columns is-mobile">
       <div class="column content font-header">
-        <router-link tag="p" to="/" style="display:inline-block; cursor: pointer; margin-top: 14px">
-          <p id="headerContent">Restaurant Seat Finder</p>
+        <router-link class="is-hidden-mobile" tag="p" to="/" style="display:inline-block; cursor: pointer; margin-top: 14px">
+          <p id="headerContentDesktop">Restaurant Seat Finder</p>
+        </router-link>
+
+        <router-link class="is-hidden-tablet" tag="div" to="/" style="display:inline-block; cursor: pointer">
+          <div>
+            <p id="headerContentMobile">Restaurant Seat</p>
+            <br>
+            <p id="headerContentMobile2" style="margin-top: -54px">Finder</p>
+          </div>
+
         </router-link>
       </div>
 
