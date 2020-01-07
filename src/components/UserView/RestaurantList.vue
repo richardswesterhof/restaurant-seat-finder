@@ -7,7 +7,7 @@
       :open="opened[res.id]"
       @open="toggleOpen(res.id)"
       @close="toggleOpen(res.id)"
-      style="margin: 0 2% calc(0.4vh + 3px) 2%;"
+      style="margin: 0 2% 5px 2%;"
     >
       <div
         slot="trigger"

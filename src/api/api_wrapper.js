@@ -27,6 +27,37 @@ export default {
     });
   },
 
+  updatePassword(id, placeNewPassword, authToken) {
+    let requestBody = {password: placeNewPassword};
+    let config = {headers: {Authorization: 'Bearer ' + authToken}};
+    //console.log('making patch request to /places/' + id, requestBody, config);
+    return axios.patch('/places/' + id, requestBody, config).then((response) => {
+      return response;
+    }, (error) => {
+      console.error(error);
+      return error.response;
+    });
+  },
+
+  update(id, placeName, placeEmail, placeWebsite, placePhoneNumber, placeFreeSeats, placeTotalSeats, placeDescription, authToken) {
+    let requestBody = {
+      name: placeName,
+      email: placeEmail,
+      website: placeWebsite,
+      phone_number: placePhoneNumber,
+      free_seats: placeFreeSeats,
+      total_seats: placeTotalSeats,
+      description: placeDescription,
+    };
+    let config = {headers: {Authorization: 'Bearer ' + authToken}};
+    return axios.patch('/places/' + id, requestBody, config).then((response) => {
+      return response;
+    }, (error) => {
+      console.error(error);
+      return error.response;
+    });
+  },
+
   requestAuthToken(username, password) {
     let requestBody = {username: username, password: password};
     //console.log('making post request to /login');
@@ -73,6 +104,16 @@ export default {
     };
 
     return axios.post('/places', requestBody).then((response) => {
+      return response;
+    }, (error) => {
+      console.error(error);
+      return error.response;
+    });
+  },
+
+  deleteAccount(id, authToken){
+    let config = {headers: {Authorization: 'Bearer ' + authToken}};
+    return axios.delete("/places/" + id, config).then((response) => {
       return response;
     }, (error) => {
       console.error(error);

@@ -1,15 +1,15 @@
 <template>
-  <div class="level" style="margin-bottom: -0.33vh">
-    <span class="level-left">
+  <div class="columns" style="margin-bottom: -16px;">
+    <div class="column">
       <span>{{resData.name}}</span>
-      &nbsp
-      <span style="font-weight: normal; font-size:0.75em;" v-show="this.getResDist !== ''">({{this.getResDist}})</span>
-    </span>
-    <span class="level-right">
+      <span style="font-weight: normal; font-size:75%; white-space: nowrap;" v-show="this.getResDist !== ''">({{this.getResDist}})</span>
+      <br>
+      <span style="font-weight: normal; font-size:90%; font-style:italic;">{{resData.type}}</span>
+    </div>
+    <div class="column is-narrow-mobile is-narrow has-text-right">
       <span :class="this.getSeatAvailability">{{resData.free_seats}}</span>
-      &nbsp
-      <span>/ {{resData.total_seats}} free</span>
-    </span>
+      <span style="margin-left: 2px">/ {{resData.total_seats}} free</span>
+    </div>
   </div>
 </template>
 

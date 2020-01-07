@@ -5,15 +5,6 @@
       <h3>Amount of free seats:</h3>
     </div>
 
-<!--    <div style="text-align: right; margin-right: calc(4% + 50px);">-->
-<!--      <b-icon-->
-<!--        pack="fas"-->
-<!--        icon="fas fa-user-circle"-->
-<!--        class="is-primary-color rest-view-account-manage-icon"-->
-<!--      >-->
-<!--      </b-icon>-->
-<!--    </div>-->
-
     <RestaurantSeatCounter
       v-if="finishedAuthentication"
       v-bind:free-seats="resData ? resData.free_seats : NaN"
