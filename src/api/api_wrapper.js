@@ -27,8 +27,8 @@ export default {
     });
   },
 
-  updatePassword(id, updatedPassword, authToken) {
-    let requestBody = {password: updatedPassword};
+  updatePassword(id, placeNewPassword, authToken) {
+    let requestBody = {password: placeNewPassword};
     let config = {headers: {Authorization: 'Bearer ' + authToken}};
     //console.log('making patch request to /places/' + id, requestBody, config);
     return axios.patch('/places/' + id, requestBody, config).then((response) => {
