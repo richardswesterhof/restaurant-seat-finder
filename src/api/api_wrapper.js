@@ -39,12 +39,13 @@ export default {
     });
   },
 
-  update(id, placeName, placeEmail, placeWebsite, placePhoneNumber, placeTotalSeats, placeDescription, authToken) {
+  update(id, placeName, placeEmail, placeWebsite, placePhoneNumber, placeFreeSeats, placeTotalSeats, placeDescription, authToken) {
     let requestBody = {
       name: placeName,
       email: placeEmail,
       website: placeWebsite,
       phone_number: placePhoneNumber,
+      free_seats: placeFreeSeats,
       total_seats: placeTotalSeats,
       description: placeDescription,
     };

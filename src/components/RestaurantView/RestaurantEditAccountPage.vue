@@ -89,7 +89,7 @@
           <b-input
             v-model="resData.phone_number"
             id="phoneUpdate"
-            type = "number"
+            type = "phonenumber"
             rounded
           >
           </b-input>
@@ -113,7 +113,7 @@
         <button class="button is-right is-primary" @click.prevent="deleteAccount(resData.id)" style="margin-left: 1%" id="deleteButton">Delete Account</button>
       </div>
 
-      <b-loading :active="isLoading"></b-loading>
+<!--      <b-loading :active="isLoading"></b-loading>-->
     </div>
   </div>
 </template>
@@ -122,139 +122,140 @@
   import cookieHandler from '../../utils/CookieHandler';
 
   export default {
-        name: "RestaurantEditAccountPage",
+    name: "RestaurantEditAccountPage",
 
-      computed: {
+    computed: {
 
-        isAllRequiredFieldsFilledIn() {
-          for(let i = 0; i < this.requiredFields.length; i++) {
-            if(!(this[this.requiredFields[i].name])) {
-              return false;
-            }
+      isAllRequiredFieldsFilledIn() {
+        for(let i = 0; i < this.requiredFields.length; i++) {
+          if(!(this[this.requiredFields[i].name])) {
+            return false;
           }
-          return true;
         }
-      },
+        return true;
+      }
+    },
 
 
-      data() {
-        return {
-          authToken: '',
-          resData: {},
-          finishedAuthentication: false,
-          isCardModalActive: false,
+    data() {
+      return {
+        authToken: '',
+        resData: {},
+        finishedAuthentication: false,
+        isCardModalActive: false,
 
-          placePassword: '',
-          placeNewPassword: '',
-          placeRepeatNewPassword: '',
-          placeName: '',
-          placeEmail: '',
-          placeWebsite: '',
-          placePhoneNumber: '',
-          placeTotalSeats: '',
-          placeDescription: '',
+        placePassword: '',
+        placeNewPassword: '',
+        placeRepeatNewPassword: '',
+        placeName: '',
+        placeEmail: '',
+        placeWebsite: '',
+        placePhoneNumber: '',
+        placeTotalSeats: '',
+        placeDescription: '',
 
-          requiredFields: [
-            {name: 'placeName', id: 'nameUpdate'},
-            {name: 'placeEmail', id: 'emailUpdate'},
-            {name: 'placePassword', id: 'oldPassword'},
-            {name: 'placeTotalSeats', id: 'totalSeatsUpdate'},
-          ],
-        }
-      },
+        requiredFields: [
+          {name: 'placeName', id: 'nameUpdate'},
+          {name: 'placeEmail', id: 'emailUpdate'},
+          {name: 'placePassword', id: 'oldPassword'},
+          {name: 'placeTotalSeats', id: 'totalSeatsUpdate'},
+        ],
+      }
+    },
 
-      mounted() {
-        this.markAllRequiredFields();
-      },
+    mounted() {
+      this.markAllRequiredFields();
+    },
 
-      async beforeRouteEnter(to, from, next) {
-        let cookieToken = cookieHandler.getCookie('authToken', 512);
-        if(!(from.params.authToken || cookieToken)) {
-          next({name: 'Login', params: {reasonMessage: 'No session token found, please log in'}});
-        }
-        else {
-          api.reAuthenticate(cookieToken).then((response) => {
-            //authenticated
-            if(response.status === 200) {
-              // console.log(response);
-              next(vm => {
-                vm.authToken = from.params.authToken ? from.params.authToken : cookieToken;
-                vm.resData = response.data;
-                vm.finishedAuthentication = true;
-              });
+    async beforeRouteEnter(to, from, next) {
+      let cookieToken = cookieHandler.getCookie('authToken', 512);
+      if(!(from.params.authToken || cookieToken)) {
+        next({name: 'Login', params: {reasonMessage: 'No session token found, please log in'}});
+      }
+      else {
+        api.reAuthenticate(cookieToken).then((response) => {
+          //authenticated
+          if(response.status === 200) {
+            // console.log(response);
+            next(vm => {
+              vm.authToken = from.params.authToken ? from.params.authToken : cookieToken;
+              vm.resData = response.data;
+              vm.finishedAuthentication = true;
+            });
+          }
+          //not authenticated
+          else {
+            next({name: 'Login', params: {reasonMessage: 'Your session could not be verified, please log in again'}});
+          }
+        });
+      }
+    },
+
+    async mounted() {
+      await this.$nextTick();
+      this.$store.dispatch('loginSuccessful', {authToken: this.authToken});
+    },
+
+    methods: {
+
+     async deleteAccount(resId){
+       await this.$nextTick();
+        console.log("Deleted");
+        api.deleteAccount(resId, this.authToken).then((response) => {
+          if(response && response.status === 200) {
+            this.$buefy.toast.open({message: 'Account was deleted successfully', type: 'is-success'});
+            if(!(this.$route.name === 'MainPage')) {
+              this.$router.push('/');
             }
-            //not authenticated
-            else {
-              next({name: 'Login', params: {reasonMessage: 'Your session could not be verified, please log in again'}});
-            }
-          });
-        }
+            this.$store.dispatch('logoutSuccessful');
+          }
+          else {
+            this.$buefy.toast.open({message: 'could not delete your account', type:'is-danger'});
+          }
+        })
       },
 
-      async mounted() {
+      async updatePassword(resId, oldPassword) {
+       await this.$nextTick();
+        console.log("Update password");
+          if(!(this.placeNewPassword === this.placeRepeatNewPassword)){
+          this.$buefy.toast.open({message: 'Passwords do not match. Please, try again.', type: 'is-danger'});
+          return;
+        }
+        if((this.placeNewPassword === this.placePassword)){
+          this.$buefy.toast.open({message: 'Use a new password', type: 'is-danger'});
+          return;
+        }
+        api.updatePassword(resId, this.placeNewPassword, this.authToken).then((response) => {
+          if(response && response.status === 200) {
+            this.$buefy.toast.open({message: 'Password has been updated. Login again using a new password', type: 'is-success'});
+            oldPassword = this.placeNewPassword;
+            if(!(this.$route.name === 'MainPage')) {
+              this.$router.push('/');
+            }
+            this.$store.dispatch('logoutSuccessful');
+          } else {
+            this.$buefy.toast.open({message: 'could not update your password', type: 'is-danger'});
+          }
+        });
+      },
+
+       async updateAccount(resId){
         await this.$nextTick();
-        this.$store.dispatch('loginSuccessful', {authToken: this.authToken});
-      },
-
-      methods: {
-
-       async deleteAccount(resId){
-         await this.$nextTick()
-          console.log("Deleted")
-          api.deleteAccount(resId, this.authToken).then((response) => {
-            if(response && response.status === 200) {
-              this.$buefy.toast.open({message: 'Account was deleted successfully', type: 'is-success'});
-              if(!(this.$route.name === 'MainPage')) {
-                this.$router.push('/');
-              }
-              this.$store.dispatch('logoutSuccessful');
-            }
-            else {
-              this.$buefy.toast.open({message: 'could not delete your account', type:'is-danger'});
-            }
-          })
-        },
-
-        async updatePassword(resId, oldPassword) {
-         await this.$nextTick()
-          console.log("Update password")
-            if(!(this.placeNewPassword === this.placeRepeatNewPassword)){
-            this.$buefy.toast.open({message: 'Passwords do not match. Please, try again.', type: 'is-danger'});
-            return;
+        console.log("Update Account");
+        let newFreeSeats = Math.min(this.resData.free_seats, this.resData.total_seats);
+        api.update(resId, this.resData.name, this.resData.email, this.resData.website, this.resData.phone_number,
+          newFreeSeats, this.resData.total_seats, this.resData.description, this.authToken).then((response) => {
+          if(response && response.status === 200) {
+            this.$buefy.toast.open({message: 'Account has been updated', type: 'is-success'});
+            this.$router.push('MyRestaurant');
+          } else {
+            this.$buefy.toast.open({message: 'Could not update your account', type: 'is-danger'});
           }
-          if((this.placeNewPassword === this.placePassword)){
-            this.$buefy.toast.open({message: 'Use a new password', type: 'is-danger'});
-            return;
-          }
-          api.updatePassword(resId, this.placeNewPassword, this.authToken).then((response) => {
-            if(response && response.status === 200) {
-              this.$buefy.toast.open({message: 'Password has been updated. Login again using a new password', type: 'is-success'});
-              oldPassword = this.placeNewPassword
-              if(!(this.$route.name === 'MainPage')) {
-                this.$router.push('/');
-              }
-              this.$store.dispatch('logoutSuccessful');
-            } else {
-              this.$buefy.toast.open({message: 'could not update your password', type: 'is-danger'});
-            }
-          });
-        },
-
-        async updateAccount(resId){
-          await this.$nextTick()
-          console.log("Update Account")
-          api.update(resId, this.placeName, this.placeEmail, this.placeWebsite, this.placePhoneNumber,
-            this.placeTotalSeats, this.placeDescription, this.authToken).then((response) => {
-            if(response && response.status === 200) {
-              this.$buefy.toast.open({message: 'Account has been updated', type: 'is-success'});
-              resData.name = response.data.placeName
-            } else {
-              this.$buefy.toast.open({message: 'Could not update your account', type: 'is-danger'});
-            }
-          });
-        }
+        });
       }
     }
+  }
 </script>
 
 <style scoped>
