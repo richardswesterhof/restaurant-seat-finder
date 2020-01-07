@@ -27,7 +27,19 @@ export default {
     });
   },
 
-  update(id, placeName, placeEmail, placeWebsite, placePhoneNumber, placeTotalSeats, placeDescription) {
+  updatePassword(id, updatedPassword, authToken) {
+    let requestBody = {password: updatedPassword};
+    let config = {headers: {Authorization: 'Bearer ' + authToken}};
+    //console.log('making patch request to /places/' + id, requestBody, config);
+    return axios.patch('/places/' + id, requestBody, config).then((response) => {
+      return response;
+    }, (error) => {
+      console.error(error);
+      return error.response;
+    });
+  },
+
+  update(id, placeName, placeEmail, placeWebsite, placePhoneNumber, placeTotalSeats, placeDescription, authToken) {
     let requestBody = {
       name: placeName,
       email: placeEmail,
@@ -36,18 +48,7 @@ export default {
       total_seats: placeTotalSeats,
       description: placeDescription,
     };
-    return axios.patch('/places/' + id, requestBody).then((response) => {
-      return response;
-    }, (error) => {
-      console.error(error);
-      return error.response;
-    });
-  },
-
-  updatePassword(id, updatedPassword, authToken) {
-    let requestBody = {password: updatedPassword};
     let config = {headers: {Authorization: 'Bearer ' + authToken}};
-    //console.log('making patch request to /places/' + id, requestBody, config);
     return axios.patch('/places/' + id, requestBody, config).then((response) => {
       return response;
     }, (error) => {

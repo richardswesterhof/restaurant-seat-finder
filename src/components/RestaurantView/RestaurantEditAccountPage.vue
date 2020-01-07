@@ -18,16 +18,22 @@
                   v-model="placePassword"
                   id="oldPassword"
                   rounded
+                  type = password
                   placeholder = "Your password"
+                  required
+                  password-reveal
                 >
                 </b-input>
               </b-field>
-              <b-field label="New Password" id="newPasswordText">
+              <b-field label="New Password" id="newPasswordText" class="is-private-info">
                 <b-input
                   v-model="placeNewPassword"
                   id="newPasswordUpdate"
+                  type = password
                   rounded
                   placeholder = "New password"
+                  required
+                  password-reveal
                 >
                 </b-input>
               </b-field>
@@ -35,12 +41,15 @@
                 <b-input
                   v-model="placeRepeatNewPassword"
                   id="repeatNewPassword"
+                  type = password
                   rounded
                   placeholder = "Repeat password"
+                  required
+                  password-reveal
                 >
                 </b-input>
               </b-field>
-              <button class="button is-right is-primary" @click.prevent="updatePassword(placeNewPassword)" id="registerButton">Confirm</button>
+              <button class="button is-right is-primary" @click.prevent="updatePassword(resData.id, placePassword)" id="registerButton">Confirm</button>
             </div>
           </div>
         </b-modal>
@@ -48,7 +57,7 @@
 
         <b-field label="Restaurant Name" id="registerNameText">
           <b-input
-            v-model="placeName"
+            v-model="resData.name"
             id="nameUpdate"
             type = "name"
             rounded
@@ -58,7 +67,7 @@
 
         <b-field label="Email" id="registerEmailText">
           <b-input
-            v-model="placeEmail"
+            v-model="resData.email"
             id="emailUpdate"
             type = "email"
             rounded
@@ -68,7 +77,7 @@
 
         <b-field label="Restaurant website" id="websiteText">
           <b-input
-            v-model="placeWebsite"
+            v-model="resData.website"
             id="websiteRegister"
             type = "website"
             rounded
@@ -78,7 +87,7 @@
 
         <b-field label="Restaurant phone number" id="phoneNumberText">
           <b-input
-            v-model="placePhoneNumber"
+            v-model="resData.phone_number"
             id="phoneUpdate"
             type = "number"
             rounded
@@ -88,7 +97,7 @@
 
         <b-field label="Total seats" style="width: 20%">
           <b-input
-            v-model="placeTotalSeats"
+            v-model="resData.total_seats"
             id="totalSeatsUpdate"
             type = "number"
             rounded
@@ -97,10 +106,10 @@
         </b-field>
 
         <b-field label="Description">
-          <b-input v-model="placeDescription" maxlength="300" type="textarea"></b-input>
+          <b-input v-model="resData.description" maxlength="300" type="textarea"></b-input>
         </b-field>
 
-        <button class="button is-right is-primary" @click.prevent="update" id="editButton">Confirm</button>
+        <button class="button is-right is-primary" @click.prevent="updateAccount(resData.id)" id="editButton">Confirm</button>
         <button class="button is-right is-primary" @click.prevent="deleteAccount(resData.id)" style="margin-left: 1%" id="deleteButton">Delete Account</button>
       </div>
 
@@ -112,7 +121,7 @@
   import api from '../../api/api_wrapper';
   import cookieHandler from '../../utils/CookieHandler';
 
-    export default {
+  export default {
         name: "RestaurantEditAccountPage",
 
       computed: {
@@ -135,6 +144,7 @@
           finishedAuthentication: false,
           isCardModalActive: false,
 
+          placePassword: '',
           placeNewPassword: '',
           placeRepeatNewPassword: '',
           placeName: '',
@@ -205,22 +215,44 @@
           })
         },
 
-        updatePassword(resId, password) {
-          if(!(this.placeNewPassword === this.placeRepeatNewPassword)){
+        async updatePassword(resId, oldPassword) {
+         await this.$nextTick()
+          console.log("Update password")
+            if(!(this.placeNewPassword === this.placeRepeatNewPassword)){
             this.$buefy.toast.open({message: 'Passwords do not match. Please, try again.', type: 'is-danger'});
             return;
           }
-          api.updatePassword(this.placeNewPassword).then((response) => {
+          if((this.placeNewPassword === this.placePassword)){
+            this.$buefy.toast.open({message: 'Use a new password', type: 'is-danger'});
+            return;
+          }
+          api.updatePassword(resId, this.placeNewPassword, this.authToken).then((response) => {
             if(response && response.status === 200) {
-              this.$buefy.toast.open({message: 'Password has been updated', type: 'is-success'});
-                  resData.password = response.data.password;
-                }
-            else {
-              this.$buefy.toast.open({message: 'could not update your password', type:'is-danger'});
+              this.$buefy.toast.open({message: 'Password has been updated. Login again using a new password', type: 'is-success'});
+              oldPassword = this.placeNewPassword
+              if(!(this.$route.name === 'MainPage')) {
+                this.$router.push('/');
+              }
+              this.$store.dispatch('logoutSuccessful');
+            } else {
+              this.$buefy.toast.open({message: 'could not update your password', type: 'is-danger'});
             }
           });
         },
 
+        async updateAccount(resId){
+          await this.$nextTick()
+          console.log("Update Account")
+          api.update(resId, this.placeName, this.placeEmail, this.placeWebsite, this.placePhoneNumber,
+            this.placeTotalSeats, this.placeDescription, this.authToken).then((response) => {
+            if(response && response.status === 200) {
+              this.$buefy.toast.open({message: 'Account has been updated', type: 'is-success'});
+              resData.name = response.data.placeName
+            } else {
+              this.$buefy.toast.open({message: 'Could not update your account', type: 'is-danger'});
+            }
+          });
+        }
       }
     }
 </script>
