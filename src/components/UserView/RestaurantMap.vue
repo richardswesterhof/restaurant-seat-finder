@@ -54,13 +54,14 @@
           center: this.highlighted ? [this.highlighted.address.coord_lat, this.highlighted.address.coord_lon] : [myCoords.latitude, myCoords.longitude],
           zoom: 13,
           worldCopyJump: true,
+          maxBoundsViscosity: 1.0,
         });
 
         //add tiles to the shell, these are the actual map images
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
           attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>, Coordinates by <a href="https://www.locationiq.com/">LocationIQ</a>',
-          minZoom: 3,
-          maxZoom: 18,
+          minZoom: 2,
+          maxZoom: 22,
           id: 'mapbox/streets-v11',
           accessToken: tokens.mapboxToken,
           //these options make the scaling of the text a bit nicer
@@ -73,9 +74,21 @@
           self.mapError = true;
         }).addTo(this.map);
 
-        // if(this.highlighted) {
-        //   this.highlighted.popup.openOn(map);
-        // }
+
+        let centerControl = L.Control.extend({
+          options: {
+            position: 'topright',
+          },
+
+          onAdd: function(map) {
+            let button = L.DomUtil.create('button', 'leaflet0bar leaflet-control leaflet-control-custom button');
+            button.innerHTML = 'center map';
+            button.onclick = self.centerMap;
+            return button;
+          }
+        });
+
+        this.map.addControl(new centerControl);
 
         this.drawRestaurantsOnMap();
       },
@@ -100,7 +113,7 @@
         this.restaurantMarkers.push(selfMarker);
 
         this.$props.restaurants.forEach(function(item, index) {
-          let restaurantPopup = L.popup();
+          let restaurantPopup = L.popup().setLatLng([item.address.coord_lat, item.address.coord_lon]);
 
           let popupContent = L.DomUtil.create('div');
           popupContent.style= 'text-align: center';
@@ -139,13 +152,28 @@
         this.$emit('viewInListRequest', item);
       },
 
-      highlight(restaurant) {
-        console.log(restaurant);
+      highlight(restaurant, noRecursion) {
         this.highlighted = restaurant;
         if(this.map) {
-          this.map.setView([restaurant.address.coord_lat, restaurant.address.coord_lon]);
-          console.log(this.restaurantMarkers.find(marker => marker.id === restaurant.id).popup)//.openOn(this.map);
+          this.map.setView([restaurant.address.coord_lat, restaurant.address.coord_lon], 17);
+          let marker = this.restaurantMarkers.find(marker => marker.id === restaurant.id);
+          if(marker && marker.popup) {
+            window.setTimeout(function(self) {
+              marker.popup.openOn(self.map);
+            }, 500, this);
+          }
         }
+        else {
+          if(noRecursion) {
+            return;
+          }
+          window.setTimeout(this.highlight, 750, restaurant, true);
+        }
+      },
+
+      centerMap() {
+        let myCoords = this.$store.getters.position.coords;
+        this.map.setView([myCoords.latitude, myCoords.longitude]);
       },
     },
   }
