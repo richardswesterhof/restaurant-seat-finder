@@ -114,7 +114,10 @@
 
         <button class="button is-right is-primary" @click.prevent="updateAccount(resData.id)" id="editButton">Confirm
         </button>
-        <button class="button is-right is-primary" @click.prevent="deleteAccount(resData.id)" style="margin-left: 1%"
+        <!--<button class="button is-right is-primary" @click.prevent="deleteAccount(resData.id)" style="margin-left: 1%"-->
+                <!--id="deleteButton">Delete Account-->
+        <!--</button>-->
+        <button class="button is-right is-primary" @click="confirm(resData.id)" style="margin-left: 1%"
                 id="deleteButton">Delete Account
         </button>
       </div>
@@ -189,6 +192,16 @@
     },
 
     methods: {
+
+      confirm(resId) {
+        this.$buefy.dialog.confirm({
+          message: 'Are you sure you want to delete your account?',
+          confirmText: 'Delete Account',
+          type: 'is-danger',
+          hasIcon: true,
+          onConfirm: () => this.deleteAccount(resId)
+        })
+      },
 
       async deleteAccount(resId) {
         await this.$nextTick();
