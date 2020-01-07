@@ -40,7 +40,7 @@
                 >
                 </b-input>
               </b-field>
-              <button class="button is-right is-primary" @click.prevent="edit" id="registerButton">Confirm</button>
+              <button class="button is-right is-primary" @click.prevent="updatePassword(placeNewPassword)" id="registerButton">Confirm</button>
             </div>
           </div>
         </b-modal>
@@ -48,8 +48,9 @@
 
         <b-field label="Restaurant Name" id="registerNameText">
           <b-input
-            v-model=resData.name
+            v-model="placeName"
             id="nameUpdate"
+            type = "name"
             rounded
           >
           </b-input>
@@ -57,8 +58,9 @@
 
         <b-field label="Email" id="registerEmailText">
           <b-input
-            v-model=resData.email
+            v-model="placeEmail"
             id="emailUpdate"
+            type = "email"
             rounded
           >
           </b-input>
@@ -66,8 +68,9 @@
 
         <b-field label="Restaurant website" id="websiteText">
           <b-input
-            v-model=resData.website
+            v-model="placeWebsite"
             id="websiteRegister"
+            type = "website"
             rounded
           >
           </b-input>
@@ -75,8 +78,9 @@
 
         <b-field label="Restaurant phone number" id="phoneNumberText">
           <b-input
-            v-model=resData.address.house_number
+            v-model="placePhoneNumber"
             id="phoneUpdate"
+            type = "number"
             rounded
           >
           </b-input>
@@ -84,19 +88,20 @@
 
         <b-field label="Total seats" style="width: 20%">
           <b-input
-            v-model=resData.total_seats
+            v-model="placeTotalSeats"
             id="totalSeatsUpdate"
+            type = "number"
             rounded
           >
           </b-input>
         </b-field>
 
         <b-field label="Description">
-          <b-input v-model=resData.description maxlength="300" type="textarea"></b-input>
+          <b-input v-model="placeDescription" maxlength="300" type="textarea"></b-input>
         </b-field>
 
         <button class="button is-right is-primary" @click.prevent="update" id="editButton">Confirm</button>
-        <button class="button is-right is-primary" @click.prevent="deleteAccount" style="margin-left: 1%" id="deleteButton">Delete Account</button>
+        <button class="button is-right is-primary" @click.prevent="deleteAccount(resData.id)" style="margin-left: 1%" id="deleteButton">Delete Account</button>
       </div>
 
       <b-loading :active="isLoading"></b-loading>
@@ -110,6 +115,19 @@
     export default {
         name: "RestaurantEditAccountPage",
 
+      computed: {
+
+        isAllRequiredFieldsFilledIn() {
+          for(let i = 0; i < this.requiredFields.length; i++) {
+            if(!(this[this.requiredFields[i].name])) {
+              return false;
+            }
+          }
+          return true;
+        }
+      },
+
+
       data() {
         return {
           authToken: '',
@@ -117,15 +135,26 @@
           finishedAuthentication: false,
           isCardModalActive: false,
 
+          placeNewPassword: '',
+          placeRepeatNewPassword: '',
+          placeName: '',
+          placeEmail: '',
+          placeWebsite: '',
+          placePhoneNumber: '',
+          placeTotalSeats: '',
+          placeDescription: '',
+
           requiredFields: [
-            {id: 'nameUpdate'},
-            {id: 'emailUpdate'},
-            {id: 'oldPassword'},
-            {id: 'newPasswordUpdate'},
-            {id :'phoneUpdate'},
-            {id: 'totalSeatsUpdate'},
+            {name: 'placeName', id: 'nameUpdate'},
+            {name: 'placeEmail', id: 'emailUpdate'},
+            {name: 'placePassword', id: 'oldPassword'},
+            {name: 'placeTotalSeats', id: 'totalSeatsUpdate'},
           ],
         }
+      },
+
+      mounted() {
+        this.markAllRequiredFields();
       },
 
       async beforeRouteEnter(to, from, next) {
@@ -137,7 +166,7 @@
           api.reAuthenticate(cookieToken).then((response) => {
             //authenticated
             if(response.status === 200) {
-              //console.log(response);
+              // console.log(response);
               next(vm => {
                 vm.authToken = from.params.authToken ? from.params.authToken : cookieToken;
                 vm.resData = response.data;
@@ -158,12 +187,37 @@
       },
 
       methods: {
-          update(){
-            api.
-          },
-        deleteAccount(){
 
-        }
+       async deleteAccount(resId){
+         await this.$nextTick()
+          console.log("Deleted")
+          api.deleteAccount(resId, this.authToken).then((response) => {
+            if(response && response.status === 200) {
+              this.$buefy.toast.open({message: 'Account was deleted successfully', type: 'is-success'});
+              this.$router.push({name: 'MyRestaurant', params: {authToken: response.data.token, resData: response.data.place}});
+            }
+            else {
+              this.$buefy.toast.open({message: 'could not delete your account', type:'is-danger'});
+            }
+          })
+        },
+
+        updatePassword(resId, password) {
+          if(!(this.placeNewPassword === this.placeRepeatNewPassword)){
+            this.$buefy.toast.open({message: 'Passwords do not match. Please, try again.', type: 'is-danger'});
+            return;
+          }
+          api.updatePassword(this.placeNewPassword).then((response) => {
+            if(response && response.status === 200) {
+              this.$buefy.toast.open({message: 'Password has been updated', type: 'is-success'});
+                  resData.password = response.data.password;
+                }
+            else {
+              this.$buefy.toast.open({message: 'could not update your password', type:'is-danger'});
+            }
+          });
+        },
+
       }
     }
 </script>
