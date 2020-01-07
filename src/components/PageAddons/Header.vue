@@ -33,6 +33,7 @@
               <b-icon pack="fas" icon="fas fa-caret-down"></b-icon>
             </b-button>
 
+            <b-dropdown-item aria-role="listitem" @click="redirectAccountPage">Manage Seats</b-dropdown-item>
             <b-dropdown-item aria-role="listitem" @click="redirectEditAccountPage">Edit Account</b-dropdown-item>
           </b-dropdown>
 
