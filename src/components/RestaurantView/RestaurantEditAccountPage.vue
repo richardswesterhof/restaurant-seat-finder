@@ -194,7 +194,10 @@
           api.deleteAccount(resId, this.authToken).then((response) => {
             if(response && response.status === 200) {
               this.$buefy.toast.open({message: 'Account was deleted successfully', type: 'is-success'});
-              this.$router.push({name: 'MyRestaurant', params: {authToken: response.data.token, resData: response.data.place}});
+              if(!(this.$route.name === 'MainPage')) {
+                this.$router.push('/');
+              }
+              this.$store.dispatch('logoutSuccessful');
             }
             else {
               this.$buefy.toast.open({message: 'could not delete your account', type:'is-danger'});
